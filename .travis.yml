@@ -1,0 +1,21 @@
+language:
+  - python
+
+# Run on 3.4-3.5
+python:
+  - "3.4"
+  - "3.5"
+
+# command to install dependencies
+install:
+  - python setup.py install
+  - pip install coveralls
+  - pip install pyyaml
+  - pip install pytest-cov
+
+# command to run tests
+script:
+  - py.test --cov-report term-missing --cov=badboids
+  
+after_success:
+  - coveralls
