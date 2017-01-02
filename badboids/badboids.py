@@ -86,14 +86,19 @@ class Simulator:
         x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
         num_boids = self.boids.num_boids
 
+        # Fly towards the middle
+        x_middle = np.mean(x_positions)
+        y_middle = np.mean(y_positions)
+        x_directions_to_middle = x_positions - x_middle
+        y_directions_to_middle = y_positions - y_middle
+        x_velocities -= x_directions_to_middle * move_to_middle_strength
+        y_velocities -= y_directions_to_middle * move_to_middle_strength
+
         for i in range(num_boids):
             for j in range(num_boids):
                 # Fly towards the middle
                 x_position_difference = x_positions[j] - x_positions[i]
                 y_position_difference = y_positions[j] - y_positions[i]
-
-                x_velocities[i] += x_position_difference * move_to_middle_strength / num_boids
-                y_velocities[i] += y_position_difference * move_to_middle_strength / num_boids
 
                 # Fly away from nearby boids
                 if x_position_difference ** 2 + y_position_difference ** 2 < alert_distance:
