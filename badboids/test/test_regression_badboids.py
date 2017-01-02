@@ -1,11 +1,11 @@
-from copy import deepcopy
 import os
+from copy import deepcopy
+
 import numpy as np
 import yaml
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids import Boids
-from badboids.badboids import update_boids, Boids
+from badboids.badboids import Simulator, Boids
 
 
 def create_boids_data():
@@ -19,11 +19,12 @@ def create_boids_data():
 
 
 def create_badboids_regression_fixtures_file():
-    '''add information'''
+    """Creates a fixtures file with before and after data of a single boids update iteration"""
     boids = create_boids_data()
+    simulator = Simulator(boids)
 
     before = deepcopy(boids)
-    update_boids(boids)
+    simulator.update_boids()
     after = boids
 
     fixture = {"before": before, "after": after}
@@ -39,9 +40,10 @@ def test_boids():
     boid_data = regression_data["before"]
     boid_data_expected = regression_data["after"]
     boids = Boids(*boid_data)
+    sut = Simulator(boids)
 
     # Act
-    update_boids(boids)
+    sut.update_boids()
 
     # Assert
     array_assert(boid_data_expected[0], boids.x_positions, 6)

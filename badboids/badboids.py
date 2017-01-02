@@ -74,21 +74,21 @@ class BoidsBuilder:
 class Simulator:
     def __init__(self, boids):
 
+        axis_limits = -500, 1500
         self.boids = boids
         self.figure = plt.figure()
         axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
         self.scatter = axes.scatter(boids.x_positions, boids.y_positions)
 
-
-    def update_boids(self, boids):
+    def update_boids(self):
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
         alert_distance = 100
         move_to_middle_strength = 0.01
         delta_t = 1
 
-        x_positions, y_positions, x_velocities, y_velocities = boids.x_positions, boids.y_positions, boids.x_velocities, boids.y_velocities
-        num_boids = boids.num_boids
+        x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
+        num_boids = self.boids.num_boids
 
         for i in range(num_boids):
             for j in range(num_boids):
@@ -120,15 +120,13 @@ class Simulator:
         x_positions += x_velocities * delta_t
         y_positions += y_velocities * delta_t
 
-
-    def animate(self, frame):
-        self.update_boids(boids)
+    def __animate(self, frame):
+        self.update_boids()
         self.scatter.set_offsets(list(zip(boids.x_positions, boids.y_positions)))
 
     def run_simulation(self):
-        anim = animation.FuncAnimation(self.figure, self.animate, frames=50, interval=50)
+        anim = animation.FuncAnimation(self.figure, self.__animate, frames=50, interval=50)
         plt.show()
-
 
 
 if __name__ == "__main__":
@@ -137,7 +135,6 @@ if __name__ == "__main__":
     y_limits = 300, 600
     x_velocity_limits = 0, 10
     y_velocity_limits = -20, 20
-    axis_limits = -500, 1500
 
     builder = BoidsBuilder()
     builder.set_num_boids(num_boids)
@@ -147,7 +144,5 @@ if __name__ == "__main__":
     builder.set_y_velocity_limits(y_velocity_limits)
     boids = builder.finish()
 
-    simulator = Simulator(boids) # todo add boids, simulation_parameters
+    simulator = Simulator(boids)  # todo add simulation_parameters
     simulator.run_simulation()
-
-
