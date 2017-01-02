@@ -29,7 +29,47 @@ class Boids:
 
         if any(num != num_x_pos for num in numbers):
             raise IndexError("length of arrays must match")
+
         return len(self.x_positions)
+
+
+class BoidsBuilder:
+
+    def __init__(self):
+
+        self.num_boids = None
+        self.x_limits = None
+        self.y_limits = None
+        self.x_velocity_limits = None
+        self.y_velocity_limits = None
+
+    def set_num_boids(self, num_boids):
+        self.num_boids = num_boids
+
+    def set_x_position_limits(self, x_limits):
+        self.x_limits = x_limits
+
+    def set_y_position_limits(self, y_limits):
+        self.y_limits = y_limits
+
+    def set_x_velocity_limits(self, x_velocity_limits):
+        self.x_velocity_limits = x_velocity_limits
+
+    def set_y_velocity_limits(self, y_velocity_limits):
+        self.y_velocity_limits = y_velocity_limits
+
+    def finish(self):
+        self.validate()
+
+        boids_x = np.array([random.uniform(*self.x_limits) for x in range(self.num_boids)])
+        boids_y = np.array([random.uniform(*self.y_limits) for x in range(self.num_boids)])
+        boid_x_velocities = np.array([random.uniform(*self.x_velocity_limits) for x in range(self.num_boids)])
+        boid_y_velocities = np.array([random.uniform(*self.y_velocity_limits) for x in range(self.num_boids)])
+
+        return Boids(boids_x, boids_y, boid_x_velocities, boid_y_velocities)
+
+    def validate(self):
+        pass
 
 
 def update_boids(boids):
@@ -86,11 +126,13 @@ if __name__ == "__main__":
     y_velocity_limits = -20, 20
     axis_limits = -500, 1500
 
-    boids_x = np.array([random.uniform(*x_limits) for x in range(num_boids)])
-    boids_y = np.array([random.uniform(*y_limits) for x in range(num_boids)])
-    boid_x_velocities = np.array([random.uniform(*x_velocity_limits) for x in range(num_boids)])
-    boid_y_velocities = np.array([random.uniform(*y_velocity_limits) for x in range(num_boids)])
-    boids = Boids(boids_x, boids_y, boid_x_velocities, boid_y_velocities)
+    builder = BoidsBuilder()
+    builder.set_num_boids(num_boids)
+    builder.set_x_position_limits(x_limits)
+    builder.set_y_position_limits(y_limits)
+    builder.set_x_velocity_limits(x_velocity_limits)
+    builder.set_y_velocity_limits(y_velocity_limits)
+    boids = builder.finish()
 
     figure = plt.figure()
     axes = plt.axes(xlim=axis_limits, ylim=axis_limits)

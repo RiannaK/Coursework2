@@ -23,7 +23,7 @@ def test_boids_init():
 
 def test_boids_init_with_incorrect_array_length():
     """Tests Boids constructor with incorrect array lengths"""
-
+    # todo add this to a fixtures file
     # Arrange
     x_positions = [1, 2, 3, 4]
     y_positions = [4, 5, 6]
