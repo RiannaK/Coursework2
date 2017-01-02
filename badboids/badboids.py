@@ -38,9 +38,8 @@ def update_boids(boids):
                 yvs[i] += (yvs[j] - yvs[i]) * formation_flying_strength / num_boids
 
     # Move according to velocities
-    for i in range(num_boids):
-        xs[i] += xvs[i] * delta_t
-        ys[i] += yvs[i] * delta_t
+    xs += xvs * delta_t
+    ys += yvs * delta_t
 
 
 def animate(frame):
