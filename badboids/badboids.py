@@ -77,14 +77,14 @@ class Simulator:
         self.scatter = None
 
     def update_boids(self):
-        formation_flying_distance = 10000
-        formation_flying_strength = 0.125
+
         alert_distance = 100
         move_to_middle_strength = 0.01
+        formation_flying_distance = 10000
+        formation_flying_strength = 0.125
         delta_t = 1
 
         x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
-        num_boids = self.boids.num_boids
 
         # Fly towards the middle
         x_middle = np.mean(x_positions)
@@ -108,17 +108,17 @@ class Simulator:
         x_velocities -= np.sum(x_separations_if_close, 0)
         y_velocities -= np.sum(y_separations_if_close, 0)
 
-        for i in range(num_boids):
-            for j in range(num_boids):
-                # Try to match speed with nearby boids
-                x_position_difference = x_positions[j] - x_positions[i]
-                y_position_difference = y_positions[j] - y_positions[i]
-                x_velocity_difference = x_velocities[j] - x_velocities[i]
-                y_velocity_difference = y_velocities[j] - y_velocities[i]
+        # Try to match speed with nearby boids
+        xvel_difference_matrix = x_velocities[:, np.newaxis] - x_velocities[np.newaxis, :]
+        yvel_difference_matrix = y_velocities[:, np.newaxis] - y_velocities[np.newaxis, :]
 
-                if x_position_difference ** 2 + y_position_difference ** 2 < formation_flying_distance:
-                    x_velocities[i] += x_velocity_difference * formation_flying_strength / num_boids
-                    y_velocities[i] += y_velocity_difference * formation_flying_strength / num_boids
+        very_far_birds = square_distances >= formation_flying_distance
+        x_velocity_differences_if_close = np.copy(xvel_difference_matrix)
+        y_velocity_differences_if_close = np.copy(yvel_difference_matrix)
+        x_velocity_differences_if_close[very_far_birds] = 0
+        y_velocity_differences_if_close[very_far_birds] = 0
+        x_velocities += np.mean(x_velocity_differences_if_close, 0) * formation_flying_strength
+        y_velocities += np.mean(y_velocity_differences_if_close, 0) * formation_flying_strength
 
         # Move according to velocities
         x_positions += x_velocities * delta_t
