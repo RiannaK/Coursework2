@@ -1,0 +1,10 @@
+*.pyc
+*.png
+
+.idea
+.cache
+.coverage
+
+boids.egg-info
+build
+dist
