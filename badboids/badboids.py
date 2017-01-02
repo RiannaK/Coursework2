@@ -13,8 +13,8 @@ def update_boids(boids):
     formation_flying_distance = 10000
     formation_flying_strength = 0.125
     alert_distance = 100
-    delta_t = 1
     move_to_middle_strength = 0.01
+    delta_t = 1
 
     x_positions, y_positions, x_velocities, y_velocities = boids
     num_boids = len(x_positions)
@@ -22,20 +22,28 @@ def update_boids(boids):
     for i in range(num_boids):
         for j in range(num_boids):
             # Fly towards the middle
-            x_velocities[i] += (x_positions[j] - x_positions[i]) * move_to_middle_strength / num_boids
-            y_velocities[i] += (y_positions[j] - y_positions[i]) * move_to_middle_strength / num_boids
+            x_position_difference = x_positions[j] - x_positions[i]
+            y_position_difference = y_positions[j] - y_positions[i]
+
+            x_velocities[i] += x_position_difference * move_to_middle_strength / num_boids
+            y_velocities[i] += y_position_difference * move_to_middle_strength / num_boids
 
             # Fly away from nearby boids
-            if (x_positions[j] - x_positions[i]) ** 2 + (y_positions[j] - y_positions[i]) ** 2 < alert_distance:
-                x_velocities[i] = x_velocities[i] + (x_positions[i] - x_positions[j])
-                y_velocities[i] = y_velocities[i] + (y_positions[i] - y_positions[j])
+            if x_position_difference ** 2 + y_position_difference ** 2 < alert_distance:
+                x_velocities[i] -= x_position_difference
+                y_velocities[i] -= y_position_difference
 
     for i in range(num_boids):
         for j in range(num_boids):
             # Try to match speed with nearby boids
-            if (x_positions[j] - x_positions[i]) ** 2 + (y_positions[j] - y_positions[i]) ** 2 < formation_flying_distance:
-                x_velocities[i] += (x_velocities[j] - x_velocities[i]) * formation_flying_strength / num_boids
-                y_velocities[i] += (y_velocities[j] - y_velocities[i]) * formation_flying_strength / num_boids
+            x_position_difference = x_positions[j] - x_positions[i]
+            y_position_difference = y_positions[j] - y_positions[i]
+            x_velocity_difference = x_velocities[j] - x_velocities[i]
+            y_velocity_difference = y_velocities[j] - y_velocities[i]
+
+            if x_position_difference ** 2 + y_position_difference ** 2 < formation_flying_distance:
+                x_velocities[i] += x_velocity_difference * formation_flying_strength / num_boids
+                y_velocities[i] += y_velocity_difference * formation_flying_strength / num_boids
 
     # Move according to velocities
     x_positions += x_velocities * delta_t
