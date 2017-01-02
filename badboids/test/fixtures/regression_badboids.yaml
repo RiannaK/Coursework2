@@ -1,116 +1,118 @@
-after: !!python/tuple
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - &id001 !!python/name:numpy.ndarray ''
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - &id002 !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
-  - false
-  - !!binary |
-    ZmZmZub7e8CgGi9d/9N4wED7Eaz/q3XAEEMLrf+DcsCTrRxa/7duwAbBHFr/Z2jAQ8EcWv8XYsCI
-    gjm0/o9XwBAFc2j930XAf3/025n5GkA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    zczMzEz7e8BeukmM+6N4wL7efbT9S3XAbtVOu/3zccAHv8h2+zdtwChHyXb7h2bArZGS7favX8C4
-    kZLt9k9SwOBGSrbbvzPAj+91oGbaQEA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    zczMzMwMAkAgsHJoUQAGQC1gAvcpAApAJnheeikADkCVTWq8FAARQEffZ7wUABNAmNdnvBQAFUCB
-    12e8FAAXQIDXZ7wUABlAf3/025n5GkA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    mpmZmZlZAkBzaJHtHAEXQE4oRHBJgCJAQlIllkiAKUDFB7pJJEAwQL3GtUkkwDNAS7m1SSRAN0Ah
-    ubVJJMA6QCC5tUkkQD5Aj+91oGbaQEA=
-before: !!python/tuple
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    AAAAAAAgfMAAAAAAAAB5wAAAAAAA4HXAAAAAAADAcsAAAAAAAEBvwAAAAAAAAGnAAAAAAADAYsAA
-    AAAAAABZwAAAAAAAAEnAAAAAAAAAAAA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    AAAAAAAgfMAAAAAAAAB5wAAAAAAA4HXAAAAAAADAcsAAAAAAAEBvwAAAAAAAAGnAAAAAAADAYsAA
-    AAAAAABZwAAAAAAAAEnAAAAAAAAAAAA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAA
-    AAAAAAAcQAAAAAAAACBAAAAAAAAAIkA=
-- !!python/object/apply:numpy.core.multiarray._reconstruct
-  args:
-  - *id001
-  - !!python/tuple [0]
-  - !!binary |
-    Yg==
-  state: !!python/tuple
-  - 1
-  - !!python/tuple [10]
-  - *id002
-  - false
-  - !!binary |
-    AAAAAAAAAAAAAAAAAAAQQAAAAAAAACBAAAAAAAAAKEAAAAAAAAAwQAAAAAAAADRAAAAAAAAAOEAA
-    AAAAAAA8QAAAAAAAAEBAAAAAAAAAQkA=
+after: !!python/object:badboids.badboids.Boids
+  num_boids: 10
+  x_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - &id001 !!python/name:numpy.ndarray ''
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - &id002 !!python/object/apply:numpy.dtype
+      args: [f8, 0, 1]
+      state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+    - false
+    - !!binary |
+      o+GJHodUSMDzcARBcTNDwMlMmkShR0DAduKSZPm3OsCB1pQ7CuE0wKaw5qbwFC7Af0XnII5oIsAG
+      yNy5z/MKwD5zSo5atwNAj6rh4MZlKUA=
+  x_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      LBqe6HFIDcCl4XHf15H5P3YzW7brhQNATexo2zRACkD8pawR13sQQLWeMrIe1hNAAnUxvuMuF0D9
+      mxEjGIYaQJ85JUet2x1Aj6rh4MZlKUA=
+  y_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      LSdRPRJf9T+m244tWwsbQNheV+egmCZA4Z1zALmoL0DLEpOq7Vo0QHJ55C723zhA8e+sxmdjPUDc
+      eJLRmfJAQKEisDOlMkNAJSQ5HIHiRUA=
+  y_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      LSdRPRJf9T+m244tWwsXQNheV+egmCJA4Z1zALmoKUDLEpOq7VowQHJ55C723zNA8e+sxmdjN0C3
+      8SSjM+U6QEJFYGdKZT5AJSQ5HIFiQUA=
+before: !!python/object:badboids.badboids.Boids
+  num_boids: 10
+  x_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      AAAAAACARsAAAAAAAABEwAAAAAAAgEHAAAAAAAAAPsAAAAAAAAA5wAAAAAAAADTAAAAAAAAALsAA
+      AAAAAAAkwAAAAAAAABTAAAAAAAAAAAA=
+  x_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAA
+      AAAAAAAcQAAAAAAAACBAAAAAAAAAIkA=
+  y_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAA
+      AAAAAAAcQAAAAAAAACBAAAAAAAAAIkA=
+  y_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+    args:
+    - *id001
+    - !!python/tuple [0]
+    - !!binary |
+      Yg==
+    state: !!python/tuple
+    - 1
+    - !!python/tuple [10]
+    - *id002
+    - false
+    - !!binary |
+      AAAAAAAAAAAAAAAAAAAQQAAAAAAAACBAAAAAAAAAKEAAAAAAAAAwQAAAAAAAADRAAAAAAAAAOEAA
+      AAAAAAA8QAAAAAAAAEBAAAAAAAAAQkA=

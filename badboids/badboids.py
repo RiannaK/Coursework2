@@ -94,16 +94,19 @@ class Simulator:
         x_velocities -= x_directions_to_middle * move_to_middle_strength
         y_velocities -= y_directions_to_middle * move_to_middle_strength
 
-        for i in range(num_boids):
-            for j in range(num_boids):
-                # Fly towards the middle
-                x_position_difference = x_positions[j] - x_positions[i]
-                y_position_difference = y_positions[j] - y_positions[i]
+        # Fly away from nearby boids
+        xsep_matrix = x_positions[:, np.newaxis] - x_positions[np.newaxis, :]
+        ysep_matrix = y_positions[:, np.newaxis] - y_positions[np.newaxis, :]
 
-                # Fly away from nearby boids
-                if x_position_difference ** 2 + y_position_difference ** 2 < alert_distance:
-                    x_velocities[i] -= x_position_difference
-                    y_velocities[i] -= y_position_difference
+        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
+        close_birds = square_distances < alert_distance
+        far_birds = np.logical_not(close_birds)
+        x_separations_if_close = np.copy(xsep_matrix)
+        y_separations_if_close = np.copy(ysep_matrix)
+        x_separations_if_close[far_birds] = 0
+        y_separations_if_close[far_birds] = 0
+        x_velocities -= np.sum(x_separations_if_close, 0)
+        y_velocities -= np.sum(y_separations_if_close, 0)
 
         for i in range(num_boids):
             for j in range(num_boids):

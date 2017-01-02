@@ -1,6 +1,5 @@
 import os
 from copy import deepcopy
-
 import numpy as np
 import yaml
 from numpy.testing import assert_array_almost_equal as array_assert
@@ -9,8 +8,8 @@ from badboids.badboids import Simulator, Boids
 
 
 def create_boids_data():
-    boids_x = np.arange(-450.0, 50.0, 50.0)
-    boids_y = np.arange(-450.0, 50.0, 50.0)
+    boids_x = np.arange(-45.0, 5.0, 5.0)
+    boids_y = np.arange(0.0, 10.0, 1.0)
     boids_x_velocities = np.arange(0.0, 10.0, 1.0)
     boids_y_velocities = np.arange(0.0, 40.0, 4.0)
     boids = Boids(boids_x, boids_y, boids_x_velocities, boids_y_velocities)
@@ -37,19 +36,18 @@ def test_boids():
 
     # Arrange
     regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixtures', 'regression_badboids.yaml')))
-    boid_data = regression_data["before"]
+    boids = regression_data["before"]
     boid_data_expected = regression_data["after"]
-    boids = Boids(*boid_data)
     sut = Simulator(boids)
 
     # Act
     sut.update_boids()
 
     # Assert
-    array_assert(boid_data_expected[0], boids.x_positions, 6)
-    array_assert(boid_data_expected[1], boids.y_positions, 6)
-    array_assert(boid_data_expected[2], boids.x_velocities, 6)
-    array_assert(boid_data_expected[3], boids.y_velocities, 6)
+    array_assert(boid_data_expected.x_positions, boids.x_positions, 6)
+    array_assert(boid_data_expected.y_positions, boids.y_positions, 6)
+    array_assert(boid_data_expected.x_velocities, boids.x_velocities, 6)
+    array_assert(boid_data_expected.y_velocities, boids.y_velocities, 6)
 
 
 if __name__ == "__main__":
