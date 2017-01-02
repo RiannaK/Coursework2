@@ -11,27 +11,28 @@ import random
 
 def update_boids(boids):
     xs, ys, xvs, yvs = boids
-    for i in range(len(xs)):
-        for j in range(len(xs)):
+    num_boids = len(xs)
+    for i in range(num_boids):
+        for j in range(num_boids):
             # Fly towards the middle
-            xvs[i] += (xs[j] - xs[i]) * 0.01 / len(xs)
-            yvs[i] += (ys[j] - ys[i]) * 0.01 / len(xs)
+            xvs[i] += (xs[j] - xs[i]) * 0.01 / num_boids
+            yvs[i] += (ys[j] - ys[i]) * 0.01 / num_boids
 
             # Fly away from nearby boids
             if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 100:
                 xvs[i] = xvs[i] + (xs[i] - xs[j])
                 yvs[i] = yvs[i] + (ys[i] - ys[j])
 
-    for i in range(len(xs)):
-        for j in range(len(xs)):
+    for i in range(num_boids):
+        for j in range(num_boids):
 
             # Try to match speed with nearby boids
             if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < 10000:
-                xvs[i] += (xvs[j] - xvs[i]) * 0.125 / len(xs)
-                yvs[i] += (yvs[j] - yvs[i]) * 0.125 / len(xs)
+                xvs[i] += (xvs[j] - xvs[i]) * 0.125 / num_boids
+                yvs[i] += (yvs[j] - yvs[i]) * 0.125 / num_boids
 
     # Move according to velocities
-    for i in range(len(xs)):
+    for i in range(num_boids):
         xs[i] += xvs[i]
         ys[i] += yvs[i]
 
