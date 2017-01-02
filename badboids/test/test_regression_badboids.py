@@ -7,10 +7,10 @@ from badboids.badboids import update_boids
 
 
 def create_boids_data():
-    boids_x = list(np.arange(-450.0, 50.0, 50.0))
-    boids_y = list(np.arange(-450.0, 50.0, 50.0))
-    boids_x_velocities = list(np.arange(0.0, 10.0, 1.0))
-    boids_y_velocities = list(np.arange(0.0, 40.0, 4.0))
+    boids_x = np.arange(-450.0, 50.0, 50.0)
+    boids_y = np.arange(-450.0, 50.0, 50.0)
+    boids_x_velocities = np.arange(0.0, 10.0, 1.0)
+    boids_y_velocities = np.arange(0.0, 40.0, 4.0)
     boids = (boids_x, boids_y, boids_x_velocities, boids_y_velocities)
 
     return boids

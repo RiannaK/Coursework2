@@ -7,7 +7,7 @@ for use as an exercise on refactoring.
 from matplotlib import pyplot as plt
 from matplotlib import animation
 import random
-
+import numpy as np
 
 def update_boids(boids):
     formation_flying_distance = 10000
@@ -56,10 +56,10 @@ if __name__ == "__main__":
     y_velocity_limits = -20, 20
     axis_limits = -500, 1500
 
-    boids_x = [random.uniform(*x_limits) for x in range(num_boids)]
-    boids_y = [random.uniform(*y_limits) for x in range(num_boids)]
-    boid_x_velocities = [random.uniform(*x_velocity_limits) for x in range(num_boids)]
-    boid_y_velocities = [random.uniform(*y_velocity_limits) for x in range(num_boids)]
+    boids_x = np.array([random.uniform(*x_limits) for x in range(num_boids)])
+    boids_y = np.array([random.uniform(*y_limits) for x in range(num_boids)])
+    boid_x_velocities = np.array([random.uniform(*x_velocity_limits) for x in range(num_boids)])
+    boid_y_velocities = np.array([random.uniform(*y_velocity_limits) for x in range(num_boids)])
     boids = (boids_x, boids_y, boid_x_velocities, boid_y_velocities)
 
     figure = plt.figure()
