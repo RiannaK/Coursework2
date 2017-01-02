@@ -1,4 +1,5 @@
 import pytest
+
 from badboids.badboids import Boids
 
 
