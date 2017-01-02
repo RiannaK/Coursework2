@@ -73,12 +73,8 @@ class BoidsBuilder:
 
 class Simulator:
     def __init__(self, boids):
-
-        axis_limits = -500, 1500
         self.boids = boids
-        self.figure = plt.figure()
-        axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
-        self.scatter = axes.scatter(boids.x_positions, boids.y_positions)
+        self.scatter = None
 
     def update_boids(self):
         formation_flying_distance = 10000
@@ -125,7 +121,13 @@ class Simulator:
         self.scatter.set_offsets(list(zip(boids.x_positions, boids.y_positions)))
 
     def run_simulation(self):
-        anim = animation.FuncAnimation(self.figure, self.__animate, frames=50, interval=50)
+
+        axis_limits = -500, 1500
+        figure = plt.figure()
+        axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
+        self.scatter = axes.scatter(boids.x_positions, boids.y_positions)
+
+        anim = animation.FuncAnimation(figure, self.__animate, frames=50, interval=50)
         plt.show()
 
 
