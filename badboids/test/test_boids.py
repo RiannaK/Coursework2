@@ -1,5 +1,5 @@
 import pytest
-from badboids.badboids import Boids
+from badboids.boids import Boids
 
 
 def test_boids_init():

@@ -1,4 +1,4 @@
-from badboids.badboids import BoidsBuilder
+from badboids.boids import BoidsBuilder
 
 
 def test_boids_builder_set_num_boids():
