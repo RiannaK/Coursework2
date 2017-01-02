@@ -16,30 +16,30 @@ def update_boids(boids):
     delta_t = 1
     move_to_middle_strength = 0.01
 
-    xs, ys, xvs, yvs = boids
-    num_boids = len(xs)
+    x_positions, y_positions, x_velocities, y_velocities = boids
+    num_boids = len(x_positions)
 
     for i in range(num_boids):
         for j in range(num_boids):
             # Fly towards the middle
-            xvs[i] += (xs[j] - xs[i]) * move_to_middle_strength / num_boids
-            yvs[i] += (ys[j] - ys[i]) * move_to_middle_strength / num_boids
+            x_velocities[i] += (x_positions[j] - x_positions[i]) * move_to_middle_strength / num_boids
+            y_velocities[i] += (y_positions[j] - y_positions[i]) * move_to_middle_strength / num_boids
 
             # Fly away from nearby boids
-            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < alert_distance:
-                xvs[i] = xvs[i] + (xs[i] - xs[j])
-                yvs[i] = yvs[i] + (ys[i] - ys[j])
+            if (x_positions[j] - x_positions[i]) ** 2 + (y_positions[j] - y_positions[i]) ** 2 < alert_distance:
+                x_velocities[i] = x_velocities[i] + (x_positions[i] - x_positions[j])
+                y_velocities[i] = y_velocities[i] + (y_positions[i] - y_positions[j])
 
     for i in range(num_boids):
         for j in range(num_boids):
             # Try to match speed with nearby boids
-            if (xs[j] - xs[i]) ** 2 + (ys[j] - ys[i]) ** 2 < formation_flying_distance:
-                xvs[i] += (xvs[j] - xvs[i]) * formation_flying_strength / num_boids
-                yvs[i] += (yvs[j] - yvs[i]) * formation_flying_strength / num_boids
+            if (x_positions[j] - x_positions[i]) ** 2 + (y_positions[j] - y_positions[i]) ** 2 < formation_flying_distance:
+                x_velocities[i] += (x_velocities[j] - x_velocities[i]) * formation_flying_strength / num_boids
+                y_velocities[i] += (y_velocities[j] - y_velocities[i]) * formation_flying_strength / num_boids
 
     # Move according to velocities
-    xs += xvs * delta_t
-    ys += yvs * delta_t
+    x_positions += x_velocities * delta_t
+    y_positions += y_velocities * delta_t
 
 
 def animate(frame):
