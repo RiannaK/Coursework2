@@ -1,5 +1,6 @@
+import numpy as np
 import pytest
-
+from numpy.testing import assert_array_almost_equal as array_assert
 from badboids.badboids import Boids
 
 
@@ -7,31 +8,35 @@ def test_boids_init():
     """Tests Boids constructor"""
 
     # Arrange
-    x_positions = [1, 2, 3]
-    y_positions = [4, 5, 6]
-    x_velocities = [10, 11, 12]
-    y_velocities = [13, 14, 15]
+    x_positions = np.array([1., 2., 3.])
+    y_positions = np.array([3., 5., 7.])
+    positions = np.vstack([x_positions, y_positions])
+
+    x_velocities = np.array([10., 11., 12.])
+    y_velocities = np.array([13., 14., 15.])
+    velocities = np.vstack([x_velocities, y_velocities])
 
     # Act
-    sut = Boids(x_positions, y_positions, x_velocities, y_velocities)
+    sut = Boids(positions, velocities)
 
     # Assert
-    assert sut.x_positions == x_positions
-    assert sut.y_positions == y_positions
-    assert sut.x_velocities == x_velocities
-    assert sut.y_velocities == y_velocities
+    array_assert(sut.positions, positions)
+    array_assert(sut.velocities, velocities)
 
 
 def test_boids_init_with_incorrect_array_length():
     """Tests Boids constructor with incorrect array lengths"""
     # todo add this to a fixtures file
     # Arrange
-    x_positions = [1, 2, 3, 4]
-    y_positions = [4, 5, 6]
-    x_velocities = [10, 11, 12]
-    y_velocities = [13, 14, 15]
+    x_positions = np.array([1., 2., 3., 4.])
+    y_positions = np.array([3., 5., 7.,5.])
+    positions = np.vstack([x_positions, y_positions])
+
+    x_velocities = np.array([10., 11., 12.])
+    y_velocities = np.array([13., 14., 15.])
+    velocities = np.vstack([x_velocities, y_velocities])
 
     # Act + Assert
     with pytest.raises(IndexError):
-        Boids(x_positions, y_positions, x_velocities, y_velocities)
+        Boids(positions, velocities)
 

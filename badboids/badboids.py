@@ -11,25 +11,17 @@ import numpy as np
 
 class Boids:
 
-    def __init__(self, x_positions, y_positions, x_velocities, y_velocities):
-        self.x_positions = x_positions
-        self.y_positions = y_positions
-        self.x_velocities = x_velocities
-        self.y_velocities = y_velocities
+    def __init__(self, positions, velocities):
+        self.positions = positions
+        self.velocities = velocities
         self.num_boids = self.get_number_of_boids()
 
     def get_number_of_boids(self):
-        num_x_pos = len(self.x_positions)
-        num_y_pos = len(self.y_positions)
-        num_x_vel = len(self.x_velocities)
-        num_y_vel = len(self.y_velocities)
 
-        numbers = [num_x_pos, num_y_pos, num_x_vel, num_y_vel]
+        if self.positions.shape != self.velocities.shape:
+            raise IndexError("matrix dimensions must match")
 
-        if any(num != num_x_pos for num in numbers):
-            raise IndexError("length of arrays must match")
-
-        return len(self.x_positions)
+        return self.positions.shape[1]
 
 
 class BoidsBuilder:
@@ -60,12 +52,20 @@ class BoidsBuilder:
     def finish(self):
         self.validate()
 
-        boids_x = np.array([random.uniform(*self.x_limits) for x in range(self.num_boids)])
-        boids_y = np.array([random.uniform(*self.y_limits) for x in range(self.num_boids)])
-        boid_x_velocities = np.array([random.uniform(*self.x_velocity_limits) for x in range(self.num_boids)])
-        boid_y_velocities = np.array([random.uniform(*self.y_velocity_limits) for x in range(self.num_boids)])
+        lower_positions = np.array([self.x_limits[0], self.y_limits[0]])
+        upper_positions = np.array([self.x_limits[1], self.y_limits[1]])
 
-        return Boids(boids_x, boids_y, boid_x_velocities, boid_y_velocities)
+        lower_velocities = np.array([self.x_velocity_limits[0], self.y_velocity_limits[0]])
+        upper_velocities = np.array([self.x_velocity_limits[1], self.y_velocity_limits[1]])
+
+        positions = self.make_random_array(lower_positions, upper_positions)
+        velocities = self.make_random_array(lower_velocities, upper_velocities)
+
+        return Boids(positions, velocities)
+
+    def make_random_array(self, lower_limits, upper_limits):
+        width = upper_limits - lower_limits
+        return lower_limits[:, np.newaxis] + (np.random.rand(2, self.num_boids) * width[:, np.newaxis])
 
     def validate(self):
         pass
@@ -85,72 +85,63 @@ class Simulator:
     def fly_towards_middle(self):
         move_to_middle_strength = 0.01
 
-        x_middle = np.mean(self.boids.x_positions)
-        y_middle = np.mean(self.boids.y_positions)
-        x_directions_to_middle = self.boids.x_positions - x_middle
-        y_directions_to_middle = self.boids.y_positions - y_middle
-        self.boids.x_velocities -= x_directions_to_middle * move_to_middle_strength
-        self.boids.y_velocities -= y_directions_to_middle * move_to_middle_strength
+        middle = np.mean(self.boids.positions, 1)
+        directions_to_middle = self.boids.positions - middle[:, np.newaxis]
+        self.boids.velocities -= directions_to_middle * move_to_middle_strength
 
     def fly_away_from_nearby_boids(self):
         alert_distance = 100
 
         # Broadcast positions into matrices of separations
-        xsep_matrix = self.boids.x_positions[:, np.newaxis] - self.boids.x_positions[np.newaxis, :]
-        ysep_matrix = self.boids.y_positions[:, np.newaxis] - self.boids.y_positions[np.newaxis, :]
-        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
+        sep_matrix = self.boids.positions[:, np.newaxis, :] - self.boids.positions[:, :, np.newaxis]
+        square_displacements = sep_matrix * sep_matrix
+        square_distances = np.sum(square_displacements, 0)
 
         close_birds = square_distances < alert_distance
         far_birds = np.logical_not(close_birds)
 
         # use logical masking to ignore far away birds
-        x_separations_if_close = np.copy(xsep_matrix)
-        x_separations_if_close[far_birds] = 0
-        y_separations_if_close = np.copy(ysep_matrix)
-        y_separations_if_close[far_birds] = 0
+        separations_if_close = np.copy(sep_matrix)
+        separations_if_close[0, :, :][far_birds] = 0
+        separations_if_close[1, :, :][far_birds] = 0
 
-        self.boids.x_velocities -= np.sum(x_separations_if_close, 0)
-        self.boids.y_velocities -= np.sum(y_separations_if_close, 0)
+        self.boids.velocities += np.sum(separations_if_close, 1)
 
     def match_speed_of_nearby_boids(self):
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
 
         # Broadcast positions into matrices of separations
-        xsep_matrix = self.boids.x_positions[:, np.newaxis] - self.boids.x_positions[np.newaxis, :]
-        ysep_matrix = self.boids.y_positions[:, np.newaxis] - self.boids.y_positions[np.newaxis, :]
-        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
+        sep_matrix = self.boids.positions[:, np.newaxis, :] - self.boids.positions[:, :, np.newaxis]
+        square_displacements = sep_matrix * sep_matrix
+        square_distances = np.sum(square_displacements, 0)
 
         # Broadcast velocities into matrices of velocity differences
-        xvel_difference_matrix = self.boids.x_velocities[:, np.newaxis] - self.boids.x_velocities[np.newaxis, :]
-        yvel_difference_matrix = self.boids.y_velocities[:, np.newaxis] - self.boids.y_velocities[np.newaxis, :]
+        vel_difference_matrix = self.boids.velocities[:, np.newaxis, :] - self.boids.velocities[:, :, np.newaxis]
 
         very_far_birds = square_distances >= formation_flying_distance
 
         # use logical masking to ignore far away birds
-        x_velocity_differences_if_close = np.copy(xvel_difference_matrix)
-        x_velocity_differences_if_close[very_far_birds] = 0
-        y_velocity_differences_if_close = np.copy(yvel_difference_matrix)
-        y_velocity_differences_if_close[very_far_birds] = 0
+        velocity_differences_if_close = np.copy(vel_difference_matrix)
+        velocity_differences_if_close[0, :, :][very_far_birds] = 0
+        velocity_differences_if_close[1,:,:][very_far_birds] = 0
 
-        self.boids.x_velocities += np.mean(x_velocity_differences_if_close, 0) * formation_flying_strength
-        self.boids.y_velocities += np.mean(y_velocity_differences_if_close, 0) * formation_flying_strength
+        self.boids.velocities += np.mean(velocity_differences_if_close, 2) * formation_flying_strength
 
     def update_positions(self):
         delta_t = 1
-        self.boids.x_positions += self.boids.x_velocities * delta_t
-        self.boids.y_positions += self.boids.y_velocities * delta_t
+        self.boids.positions += self.boids.velocities * delta_t
 
     def __animate(self, frame):
         self.update_boids()
-        self.scatter.set_offsets(list(zip(boids.x_positions, boids.y_positions)))
+        self.scatter.set_offsets(boids.positions.transpose())
 
     def run_simulation(self):
 
         axis_limits = -500, 1500
         figure = plt.figure()
         axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
-        self.scatter = axes.scatter(boids.x_positions, boids.y_positions)
+        self.scatter = axes.scatter(boids.positions[0, :], boids.positions[1, :])
 
         anim = animation.FuncAnimation(figure, self.__animate, frames=50, interval=50)
         plt.show()
@@ -171,5 +162,5 @@ if __name__ == "__main__":
     builder.set_y_velocity_limits(y_velocity_limits)
     boids = builder.finish()
 
-    simulator = Simulator(boids)  # todo add simulation_parameters
+    simulator = Simulator(boids)  # todo add simulation_parameters = config file
     simulator.run_simulation()
