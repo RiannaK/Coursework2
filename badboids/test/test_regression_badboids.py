@@ -4,7 +4,7 @@ import numpy as np
 import yaml
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.badboids import Simulator, Boids
+from badboids.boids import Simulator, Boids
 
 
 def create_boids_data():
@@ -48,10 +48,8 @@ def test_boids():
     sut.update_boids()
 
     # Assert
-    array_assert(boid_data_expected.x_positions, boids.positions[0,:], 6)
-    array_assert(boid_data_expected.y_positions, boids.positions[1, :], 6)
-    array_assert(boid_data_expected.x_velocities, boids.velocities[0, :], 6)
-    array_assert(boid_data_expected.y_velocities, boids.velocities[1, :], 6)
+    array_assert(boid_data_expected.positions, boids.positions, 6)
+    array_assert(boid_data_expected.velocities, boids.velocities, 6)
 
 
 if __name__ == "__main__":

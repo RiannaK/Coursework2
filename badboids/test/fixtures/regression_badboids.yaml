@@ -1,6 +1,6 @@
-after: !!python/object:badboids.badboids.Boids
+after: !!python/object:badboids.boids.Boids
   num_boids: 10
-  x_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+  positions: !!python/object/apply:numpy.core.multiarray._reconstruct
     args:
     - &id001 !!python/name:numpy.ndarray ''
     - !!python/tuple [0]
@@ -8,15 +8,16 @@ after: !!python/object:badboids.badboids.Boids
       Yg==
     state: !!python/tuple
     - 1
-    - !!python/tuple [10]
+    - !!python/tuple [2, 10]
     - &id002 !!python/object/apply:numpy.dtype
       args: [f8, 0, 1]
       state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
     - false
     - !!binary |
       zczMzMxOSMBmZmZmZjRDwAAAAAAASkDAMzMzMzO/OsBmZmZmZuo0wDQzMzMzKy7AmpmZmZmBIsAA
-      AAAAAGALwGZmZmZmRgNAMzMzMzM7KUA=
-  x_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+      AAAAAGALwGZmZmZmRgNAMzMzMzM7KUDgehSuR6H2P4/C9ShcHxtAMzMzMzOLJkAfhetRuIYvQIXr
+      UbgeQTRAexSuR+G+OEBxPQrXozw9QDQzMzMz3UBArkfhehQcQ0ApXI/C9cpFQA==
+  velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
     args:
     - *id001
     - !!python/tuple [0]
@@ -24,43 +25,16 @@ after: !!python/object:badboids.badboids.Boids
       Yg==
     state: !!python/tuple
     - 1
-    - !!python/tuple [10]
+    - !!python/tuple [2, 10]
     - *id002
     - false
     - !!binary |
-      zszMzMzsDMA0MzMzM3P5PwAAAAAAYANAZ2ZmZmYGCkBnZmZmZlYQQJmZmZmZqRNAzczMzMz8FkAA
-      AAAAAFAaQDMzMzMzox1AMzMzMzM7KUA=
-  y_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
-    args:
-    - *id001
-    - !!python/tuple [0]
-    - !!binary |
-      Yg==
-    state: !!python/tuple
-    - 1
-    - !!python/tuple [10]
-    - *id002
-    - false
-    - !!binary |
-      4HoUrkeh9j+PwvUoXB8bQDMzMzMziyZAH4XrUbiGL0CF61G4HkE0QHsUrkfhvjhAcT0K16M8PUA0
-      MzMzM91AQK5H4XoUHENAKVyPwvXKRUA=
-  y_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
-    args:
-    - *id001
-    - !!python/tuple [0]
-    - !!binary |
-      Yg==
-    state: !!python/tuple
-    - 1
-    - !!python/tuple [10]
-    - *id002
-    - false
-    - !!binary |
-      4HoUrkeh9j+PwvUoXB8XQDMzMzMziyJAH4XrUbiGKUCF61G4HkEwQHsUrkfhvjNAcT0K16M8N0Bn
-      ZmZmZro6QFyPwvUoOD5AKVyPwvVKQUA=
-before: !!python/object:badboids.badboids.Boids
+      zczMzMzsDMA0MzMzM3P5PwAAAAAAYANAZ2ZmZmYGCkBnZmZmZlYQQJmZmZmZqRNAzczMzMz8FkAA
+      AAAAAFAaQDMzMzMzox1AMzMzMzM7KUDgehSuR6H2P4/C9ShcHxdAMzMzMzOLIkAfhetRuIYpQIXr
+      UbgeQTBAexSuR+G+M0BxPQrXozw3QGdmZmZmujpAXI/C9Sg4PkApXI/C9UpBQA==
+before: !!python/object:badboids.boids.Boids
   num_boids: 10
-  x_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
+  positions: !!python/object/apply:numpy.core.multiarray._reconstruct
     args:
     - *id001
     - !!python/tuple [0]
@@ -68,13 +42,14 @@ before: !!python/object:badboids.badboids.Boids
       Yg==
     state: !!python/tuple
     - 1
-    - !!python/tuple [10]
+    - !!python/tuple [2, 10]
     - *id002
     - false
     - !!binary |
       AAAAAACARsAAAAAAAABEwAAAAAAAgEHAAAAAAAAAPsAAAAAAAAA5wAAAAAAAADTAAAAAAAAALsAA
-      AAAAAAAkwAAAAAAAABTAAAAAAAAAAAA=
-  x_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
+      AAAAAAAkwAAAAAAAABTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPA/AAAAAAAAAEAAAAAAAAAIQAAA
+      AAAAABBAAAAAAAAAFEAAAAAAAAAYQAAAAAAAABxAAAAAAAAAIEAAAAAAAAAiQA==
+  velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
     args:
     - *id001
     - !!python/tuple [0]
@@ -82,37 +57,10 @@ before: !!python/object:badboids.badboids.Boids
       Yg==
     state: !!python/tuple
     - 1
-    - !!python/tuple [10]
+    - !!python/tuple [2, 10]
     - *id002
     - false
     - !!binary |
       AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAA
-      AAAAAAAcQAAAAAAAACBAAAAAAAAAIkA=
-  y_positions: !!python/object/apply:numpy.core.multiarray._reconstruct
-    args:
-    - *id001
-    - !!python/tuple [0]
-    - !!binary |
-      Yg==
-    state: !!python/tuple
-    - 1
-    - !!python/tuple [10]
-    - *id002
-    - false
-    - !!binary |
-      AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAA
-      AAAAAAAcQAAAAAAAACBAAAAAAAAAIkA=
-  y_velocities: !!python/object/apply:numpy.core.multiarray._reconstruct
-    args:
-    - *id001
-    - !!python/tuple [0]
-    - !!binary |
-      Yg==
-    state: !!python/tuple
-    - 1
-    - !!python/tuple [10]
-    - *id002
-    - false
-    - !!binary |
-      AAAAAAAAAAAAAAAAAAAQQAAAAAAAACBAAAAAAAAAKEAAAAAAAAAwQAAAAAAAADRAAAAAAAAAOEAA
-      AAAAAAA8QAAAAAAAAEBAAAAAAAAAQkA=
+      AAAAAAAcQAAAAAAAACBAAAAAAAAAIkAAAAAAAAAAAAAAAAAAABBAAAAAAAAAIEAAAAAAAAAoQAAA
+      AAAAADBAAAAAAAAANEAAAAAAAAA4QAAAAAAAADxAAAAAAAAAQEAAAAAAAABCQA==

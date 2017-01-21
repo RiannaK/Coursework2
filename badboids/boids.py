@@ -3,10 +3,9 @@ A deliberately bad implementation of [Boids](http://dl.acm.org/citation.cfm?doid
 for use as an exercise on refactoring.
 """
 
-from matplotlib import pyplot as plt
-from matplotlib import animation
-import random
 import numpy as np
+from matplotlib import animation
+from matplotlib import pyplot as plt
 
 
 class Boids:
@@ -134,33 +133,16 @@ class Simulator:
 
     def __animate(self, frame):
         self.update_boids()
-        self.scatter.set_offsets(boids.positions.transpose())
+        self.scatter.set_offsets(self.boids.positions.transpose())
 
     def run_simulation(self):
 
         axis_limits = -500, 1500
         figure = plt.figure()
         axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
-        self.scatter = axes.scatter(boids.positions[0, :], boids.positions[1, :])
+        self.scatter = axes.scatter(self.boids.positions[0, :], self.boids.positions[1, :])
 
         anim = animation.FuncAnimation(figure, self.__animate, frames=50, interval=50)
         plt.show()
 
 
-if __name__ == "__main__":
-    num_boids = 50
-    x_limits = -450, 50
-    y_limits = 300, 600
-    x_velocity_limits = 0, 10
-    y_velocity_limits = -20, 20
-
-    builder = BoidsBuilder()
-    builder.set_num_boids(num_boids)
-    builder.set_x_position_limits(x_limits)
-    builder.set_y_position_limits(y_limits)
-    builder.set_x_velocity_limits(x_velocity_limits)
-    builder.set_y_velocity_limits(y_velocity_limits)
-    boids = builder.finish()
-
-    simulator = Simulator(boids)  # todo add simulation_parameters = config file
-    simulator.run_simulation()

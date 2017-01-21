@@ -1,6 +1,8 @@
 import numpy as np
 from numpy.testing import assert_array_almost_equal as array_assert
-from badboids.badboids import Boids, Simulator
+
+from badboids.boids import Boids, Simulator
+
 
 def test_simulator_fly_towards_middle():
     """Tests Simulator 'fly towards middle' method"""

@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 from numpy.testing import assert_array_almost_equal as array_assert
-from badboids.badboids import Boids
+
+from badboids.boids import Boids
 
 
 def test_boids_init():
