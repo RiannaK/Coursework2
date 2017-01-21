@@ -78,14 +78,13 @@ class Simulator:
 
     def fly_towards_middle(self):
         move_to_middle_strength = 0.01
-        x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
 
-        x_middle = np.mean(x_positions)
-        y_middle = np.mean(y_positions)
-        x_directions_to_middle = x_positions - x_middle
-        y_directions_to_middle = y_positions - y_middle
-        x_velocities -= x_directions_to_middle * move_to_middle_strength
-        y_velocities -= y_directions_to_middle * move_to_middle_strength
+        x_middle = np.mean(self.boids.x_positions)
+        y_middle = np.mean(self.boids.y_positions)
+        x_directions_to_middle = self.boids.x_positions - x_middle
+        y_directions_to_middle = self.boids.y_positions - y_middle
+        self.boids.x_velocities -= x_directions_to_middle * move_to_middle_strength
+        self.boids.y_velocities -= y_directions_to_middle * move_to_middle_strength
 
     def update_boids(self):
 
