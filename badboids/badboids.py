@@ -76,10 +76,20 @@ class Simulator:
         self.boids = boids
         self.scatter = None
 
+    def fly_towards_middle(self):
+        move_to_middle_strength = 0.01
+        x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
+
+        x_middle = np.mean(x_positions)
+        y_middle = np.mean(y_positions)
+        x_directions_to_middle = x_positions - x_middle
+        y_directions_to_middle = y_positions - y_middle
+        x_velocities -= x_directions_to_middle * move_to_middle_strength
+        y_velocities -= y_directions_to_middle * move_to_middle_strength
+
     def update_boids(self):
 
         alert_distance = 100
-        move_to_middle_strength = 0.01
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
         delta_t = 1
@@ -87,12 +97,7 @@ class Simulator:
         x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
 
         # Fly towards the middle
-        x_middle = np.mean(x_positions)
-        y_middle = np.mean(y_positions)
-        x_directions_to_middle = x_positions - x_middle
-        y_directions_to_middle = y_positions - y_middle
-        x_velocities -= x_directions_to_middle * move_to_middle_strength
-        y_velocities -= y_directions_to_middle * move_to_middle_strength
+        self.fly_towards_middle()
 
         # Fly away from nearby boids
         xsep_matrix = x_positions[:, np.newaxis] - x_positions[np.newaxis, :]
