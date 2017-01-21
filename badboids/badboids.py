@@ -86,9 +86,28 @@ class Simulator:
         self.boids.x_velocities -= x_directions_to_middle * move_to_middle_strength
         self.boids.y_velocities -= y_directions_to_middle * move_to_middle_strength
 
+    def fly_away_from_nearby_boids(self):
+        alert_distance = 100
+
+        xsep_matrix = self.boids.x_positions[:, np.newaxis] - self.boids.x_positions[np.newaxis, :]
+        ysep_matrix = self.boids.y_positions[:, np.newaxis] - self.boids.y_positions[np.newaxis, :]
+        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
+
+        close_birds = square_distances < alert_distance
+        far_birds = np.logical_not(close_birds)
+
+        x_separations_if_close = np.copy(xsep_matrix)
+        x_separations_if_close[far_birds] = 0
+        y_separations_if_close = np.copy(ysep_matrix)
+        y_separations_if_close[far_birds] = 0
+
+        self.boids.x_velocities -= np.sum(x_separations_if_close, 0)
+        self.boids.y_velocities -= np.sum(y_separations_if_close, 0)
+
+        return square_distances
+
     def update_boids(self):
 
-        alert_distance = 100
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
         delta_t = 1
@@ -99,18 +118,7 @@ class Simulator:
         self.fly_towards_middle()
 
         # Fly away from nearby boids
-        xsep_matrix = x_positions[:, np.newaxis] - x_positions[np.newaxis, :]
-        ysep_matrix = y_positions[:, np.newaxis] - y_positions[np.newaxis, :]
-
-        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
-        close_birds = square_distances < alert_distance
-        far_birds = np.logical_not(close_birds)
-        x_separations_if_close = np.copy(xsep_matrix)
-        y_separations_if_close = np.copy(ysep_matrix)
-        x_separations_if_close[far_birds] = 0
-        y_separations_if_close[far_birds] = 0
-        x_velocities -= np.sum(x_separations_if_close, 0)
-        y_velocities -= np.sum(y_separations_if_close, 0)
+        square_distances = self.fly_away_from_nearby_boids()
 
         # Try to match speed with nearby boids
         xvel_difference_matrix = x_velocities[:, np.newaxis] - x_velocities[np.newaxis, :]

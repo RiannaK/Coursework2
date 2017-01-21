@@ -31,3 +31,28 @@ def test_simulator_fly_towards_middle():
     array_assert(sut.boids.x_velocities, expected_x_velocities, 6)
     array_assert(sut.boids.y_velocities, expected_y_velocities, 6)
 
+def test_simulator_fly_away_from_nearby_boids():
+    """Tests Simulator 'fly_away_from_nearby_boids' method"""
+
+    # Arrange
+    x_positions = np.array([1., 2., 3.])
+    y_positions = np.array([3., 5., 7.])
+    x_velocities = np.array([10., 11., 12.])
+    y_velocities = np.array([13., 14., 15.])
+
+    expected_x_positions = np.array([1., 2., 3.])
+    expected_y_positions = np.array([3., 5., 7.])
+    expected_x_velocities = np.array([7., 11., 15.])
+    expected_y_velocities = np.array([7., 14., 21.])  # todo add to fixtures file
+
+    boids = Boids(x_positions, y_positions, x_velocities, y_velocities)
+    sut = Simulator(boids)
+
+    # Act
+    sut.fly_away_from_nearby_boids()
+
+    # Assert
+    array_assert(sut.boids.x_positions, expected_x_positions, 6)
+    array_assert(sut.boids.y_positions, expected_y_positions, 6)
+    array_assert(sut.boids.x_velocities, expected_x_velocities, 6)
+    array_assert(sut.boids.y_velocities, expected_y_velocities, 6)
