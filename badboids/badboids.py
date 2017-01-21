@@ -89,6 +89,7 @@ class Simulator:
     def fly_away_from_nearby_boids(self):
         alert_distance = 100
 
+        # Broadcast positions into matrices of separations
         xsep_matrix = self.boids.x_positions[:, np.newaxis] - self.boids.x_positions[np.newaxis, :]
         ysep_matrix = self.boids.y_positions[:, np.newaxis] - self.boids.y_positions[np.newaxis, :]
         square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
@@ -96,6 +97,7 @@ class Simulator:
         close_birds = square_distances < alert_distance
         far_birds = np.logical_not(close_birds)
 
+        # use logical masking to ignore far away birds
         x_separations_if_close = np.copy(xsep_matrix)
         x_separations_if_close[far_birds] = 0
         y_separations_if_close = np.copy(ysep_matrix)
@@ -110,7 +112,6 @@ class Simulator:
 
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
-        delta_t = 1
 
         x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
 
@@ -133,8 +134,12 @@ class Simulator:
         y_velocities += np.mean(y_velocity_differences_if_close, 0) * formation_flying_strength
 
         # Move according to velocities
-        x_positions += x_velocities * delta_t
-        y_positions += y_velocities * delta_t
+        self.update_positions()
+
+    def update_positions(self):
+        delta_t = 1
+        self.boids.x_positions += self.boids.x_velocities * delta_t
+        self.boids.y_positions += self.boids.y_velocities * delta_t
 
     def __animate(self, frame):
         self.update_boids()
