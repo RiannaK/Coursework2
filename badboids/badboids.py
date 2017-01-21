@@ -76,6 +76,12 @@ class Simulator:
         self.boids = boids
         self.scatter = None
 
+    def update_boids(self):
+        self.fly_towards_middle()
+        self.fly_away_from_nearby_boids()
+        self.match_speed_of_nearby_boids()
+        self.update_positions()
+
     def fly_towards_middle(self):
         move_to_middle_strength = 0.01
 
@@ -106,35 +112,29 @@ class Simulator:
         self.boids.x_velocities -= np.sum(x_separations_if_close, 0)
         self.boids.y_velocities -= np.sum(y_separations_if_close, 0)
 
-        return square_distances
-
-    def update_boids(self):
-
+    def match_speed_of_nearby_boids(self):
         formation_flying_distance = 10000
         formation_flying_strength = 0.125
 
-        x_positions, y_positions, x_velocities, y_velocities = self.boids.x_positions, self.boids.y_positions, self.boids.x_velocities, self.boids.y_velocities
+        # Broadcast positions into matrices of separations
+        xsep_matrix = self.boids.x_positions[:, np.newaxis] - self.boids.x_positions[np.newaxis, :]
+        ysep_matrix = self.boids.y_positions[:, np.newaxis] - self.boids.y_positions[np.newaxis, :]
+        square_distances = xsep_matrix * xsep_matrix + ysep_matrix * ysep_matrix
 
-        # Fly towards the middle
-        self.fly_towards_middle()
-
-        # Fly away from nearby boids
-        square_distances = self.fly_away_from_nearby_boids()
-
-        # Try to match speed with nearby boids
-        xvel_difference_matrix = x_velocities[:, np.newaxis] - x_velocities[np.newaxis, :]
-        yvel_difference_matrix = y_velocities[:, np.newaxis] - y_velocities[np.newaxis, :]
+        # Broadcast velocities into matrices of velocity differences
+        xvel_difference_matrix = self.boids.x_velocities[:, np.newaxis] - self.boids.x_velocities[np.newaxis, :]
+        yvel_difference_matrix = self.boids.y_velocities[:, np.newaxis] - self.boids.y_velocities[np.newaxis, :]
 
         very_far_birds = square_distances >= formation_flying_distance
-        x_velocity_differences_if_close = np.copy(xvel_difference_matrix)
-        y_velocity_differences_if_close = np.copy(yvel_difference_matrix)
-        x_velocity_differences_if_close[very_far_birds] = 0
-        y_velocity_differences_if_close[very_far_birds] = 0
-        x_velocities += np.mean(x_velocity_differences_if_close, 0) * formation_flying_strength
-        y_velocities += np.mean(y_velocity_differences_if_close, 0) * formation_flying_strength
 
-        # Move according to velocities
-        self.update_positions()
+        # use logical masking to ignore far away birds
+        x_velocity_differences_if_close = np.copy(xvel_difference_matrix)
+        x_velocity_differences_if_close[very_far_birds] = 0
+        y_velocity_differences_if_close = np.copy(yvel_difference_matrix)
+        y_velocity_differences_if_close[very_far_birds] = 0
+
+        self.boids.x_velocities += np.mean(x_velocity_differences_if_close, 0) * formation_flying_strength
+        self.boids.y_velocities += np.mean(y_velocity_differences_if_close, 0) * formation_flying_strength
 
     def update_positions(self):
         delta_t = 1
