@@ -31,14 +31,11 @@ Installing directly from GitHub?
 
 Once installed, the user must specify the input parameters contained within a configuration (yaml) file.
 
-There are x input parameters (shall I put in a default?):
+There are input parameters:
 
 Table of inputs required
 
 Once the configuration file has been updated, the boids script can be called from the command line using the following syntax:
 
-badboids …
-
-Is the output saved anywhere?
 
 This assignment was completed as part of the UCL [MPHYG001: Research Software Engineering with Python course] (http://github-pages.ucl.ac.uk/rsd-engineeringcourse/).

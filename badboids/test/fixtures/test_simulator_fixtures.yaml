@@ -1,0 +1,48 @@
+
+test_simulator_fly_towards_middle:
+ - positions: [[1., 2., 3.],[3., 5., 7.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[1., 2., 3.], [3., 5., 7.]]
+   expected_velocities: [[10.01, 11., 11.99], [13.02, 14., 14.98]]
+ - positions: [[0., 0.,0.],[0., 0.,0.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[0., 0.,0.], [0., 0.,0.]]
+   expected_velocities: [[10., 11., 12.], [13., 14., 15.]]
+ - positions: [[1., 1.,1.],[1., 1.,1.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[1., 1.,1.],[1., 1.,1.]]
+   expected_velocities: [[10., 11., 12.], [13., 14., 15.]]
+   
+test_simulator_fly_away_from_nearby_boids:
+ - positions: [[1., 2., 3.], [3., 5., 7.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[1., 2., 3.], [3., 5., 7.]]
+   expected_velocities: [[7., 11., 15.], [7., 14., 21.]]
+ - positions: [[-4., 0., 4.], [0., 3., 0.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[-4., 0., 4.], [0., 3., 0.]]
+   expected_velocities: [[ -2., 11., 24.], [ 10., 20., 12.]]
+ - positions: [[-40., 0., 40.], [0., 30., 0.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[-40., 0., 40.], [0., 30., 0.]]
+   expected_velocities: [[10., 11., 12.], [13., 14., 15.]]
+   
+test_simulator_match_speed_of_nearby_boids:
+ - positions: [[1., 2., 3.], [3., 5., 7.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[1., 2., 3.], [3., 5., 7.]]
+   expected_velocities: [[10.125, 11., 11.875], [13.125, 14., 14.875]]
+ - positions: [[-4., 0., 4.], [0., 3., 0.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[-4., 0., 4.], [0., 3., 0.]]
+   expected_velocities: [[10.125, 11., 11.875], [13.125,  14., 14.875]]
+ - positions: [[100., 200., 300.], [300., 500., 700.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[100., 200., 300.], [300., 500., 700.]]
+   expected_velocities: [[10., 11., 12.], [13., 14., 15.]]
+   
+test_simulator_update_velocities:
+ - positions: [[1., 2., 3.], [3., 5., 7.]]
+   velocities: [[10., 11., 12.], [13., 14., 15.]]
+   expected_positions: [[11., 13., 15.], [16., 19., 22.]]
+   expected_velocities: [[10., 11., 12.], [13., 14., 15.]]

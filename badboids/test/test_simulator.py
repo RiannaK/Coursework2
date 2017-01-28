@@ -1,4 +1,6 @@
 import numpy as np
+import yaml
+import os
 from numpy.testing import assert_array_almost_equal as array_assert
 
 from badboids.boids import Boids, Simulator
@@ -7,118 +9,97 @@ from badboids.boids import Boids, Simulator
 def test_simulator_fly_towards_middle():
     """Tests Simulator 'fly towards middle' method"""
 
-    # Arrange
-    x_positions = np.array([1., 2., 3.])
-    y_positions = np.array([3., 5., 7.])
-    positions = np.vstack([x_positions, y_positions])
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
+        fixtures = yaml.load(fixtures_file)['test_simulator_fly_towards_middle']
 
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+    for fixture in fixtures:
+        # Arrange
+        positions = np.array(fixture.pop('positions'))
+        velocities = np.array(fixture.pop('velocities'))
 
-    expected_x_positions = np.array([1., 2., 3.])
-    expected_y_positions = np.array([3., 5., 7.])
-    expected_x_velocities = np.array([10.01, 11., 11.99])
-    expected_y_velocities = np.array([13.02, 14., 14.98]) # todo add to fixtures file
+        expected_positions = np.array(fixture.pop('expected_positions'))
+        expected_velocities = np.array(fixture.pop('expected_velocities'))
 
-    boids = Boids(positions, velocities)
-    sut = Simulator(boids)
+        boids = Boids(positions, velocities)
+        sut = Simulator(boids)
 
-    # Act
-    sut.fly_towards_middle()
+        # Act
+        sut.fly_towards_middle()
 
-    # Assert
-    array_assert(sut.boids.positions[0, :], expected_x_positions, 6)
-    array_assert(sut.boids.positions[1, :], expected_y_positions, 6)
-    array_assert(sut.boids.velocities[0, :], expected_x_velocities, 6)
-    array_assert(sut.boids.velocities[1, :], expected_y_velocities, 6)
+        # Assert
+        array_assert(sut.boids.positions, expected_positions, 6)
+        array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
 
 def test_simulator_fly_away_from_nearby_boids():
     """Tests Simulator 'fly_away_from_nearby_boids' method"""
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
+        fixtures = yaml.load(fixtures_file)['test_simulator_fly_away_from_nearby_boids']
 
-    # Arrange
-    x_positions = np.array([1., 2., 3.])
-    y_positions = np.array([3., 5., 7.])
-    positions = np.vstack([x_positions, y_positions])
+    for fixture in fixtures:
+        # Arrange
+        positions = np.array(fixture.pop('positions'))
+        velocities = np.array(fixture.pop('velocities'))
 
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+        expected_positions = np.array(fixture.pop('expected_positions'))
+        expected_velocities = np.array(fixture.pop('expected_velocities'))
 
-    expected_x_positions = np.array([1., 2., 3.])
-    expected_y_positions = np.array([3., 5., 7.])
-    expected_x_velocities = np.array([7., 11., 15.])
-    expected_y_velocities = np.array([7., 14., 21.])  # todo add to fixtures file
+        boids = Boids(positions, velocities)
+        sut = Simulator(boids)
 
-    boids = Boids(positions, velocities)
-    sut = Simulator(boids)
+        # Act
+        sut.fly_away_from_nearby_boids()
 
-    # Act
-    sut.fly_away_from_nearby_boids()
-
-    # Assert
-    array_assert(sut.boids.positions[0, :], expected_x_positions, 6)
-    array_assert(sut.boids.positions[1, :], expected_y_positions, 6)
-    array_assert(sut.boids.velocities[0, :], expected_x_velocities, 6)
-    array_assert(sut.boids.velocities[1, :], expected_y_velocities, 6)
+        # Assert
+        array_assert(sut.boids.positions, expected_positions, 6)
+        array_assert(sut.boids.velocities, expected_velocities, 6)
 
 def test_simulator_match_speed_of_nearby_boids():
     """Tests Simulator 'match_speed_of_nearby_boids' method"""
 
-    # Arrange
-    x_positions = np.array([1., 2., 3.])
-    y_positions = np.array([3., 5., 7.])
-    positions = np.vstack([x_positions, y_positions])
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
+        fixtures = yaml.load(fixtures_file)['test_simulator_match_speed_of_nearby_boids']
 
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+    for fixture in fixtures:
+        # Arrange
+        positions = np.array(fixture.pop('positions'))
+        velocities = np.array(fixture.pop('velocities'))
 
-    expected_x_positions = np.array([1., 2., 3.])
-    expected_y_positions = np.array([3., 5., 7.])
-    expected_x_velocities = np.array([10.125, 11., 11.875])
-    expected_y_velocities = np.array([13.125, 14., 14.875])  # todo add to fixtures file
+        expected_positions = np.array(fixture.pop('expected_positions'))
+        expected_velocities = np.array(fixture.pop('expected_velocities'))
 
-    boids = Boids(positions, velocities)
-    sut = Simulator(boids)
+        boids = Boids(positions, velocities)
+        sut = Simulator(boids)
 
-    # Act
-    sut.match_speed_of_nearby_boids()
+        # Act
+        sut.match_speed_of_nearby_boids()
 
-    # Assert
-    array_assert(sut.boids.positions[0, :], expected_x_positions, 6)
-    array_assert(sut.boids.positions[1, :], expected_y_positions, 6)
-    array_assert(sut.boids.velocities[0, :], expected_x_velocities, 6)
-    array_assert(sut.boids.velocities[1, :], expected_y_velocities, 6)
+        # Assert
+        array_assert(sut.boids.positions, expected_positions, 6)
+        array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
 def test_simulator_update_velocities():
     """Tests Simulator 'fly_away_from_nearby_boids' method"""
 
-    # Arrange
-    x_positions = np.array([1., 2., 3.])
-    y_positions = np.array([3., 5., 7.])
-    positions = np.vstack([x_positions, y_positions])
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
+        fixtures = yaml.load(fixtures_file)['test_simulator_update_velocities']
 
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+    for fixture in fixtures:
+        # Arrange
+        positions = np.array(fixture.pop('positions'))
+        velocities = np.array(fixture.pop('velocities'))
 
-    expected_x_positions = np.array([11., 13., 15.])
-    expected_y_positions = np.array([16., 19., 22.])
-    expected_x_velocities = np.array([10., 11., 12.])
-    expected_y_velocities = np.array([13., 14., 15.])  # todo add to fixtures file
+        expected_positions = np.array(fixture.pop('expected_positions'))
+        expected_velocities = np.array(fixture.pop('expected_velocities'))
 
-    boids = Boids(positions, velocities)
-    sut = Simulator(boids)
+        boids = Boids(positions, velocities)
+        sut = Simulator(boids)
 
-    # Act
-    sut.update_positions()
+        # Act
+        sut.update_positions()
 
-    # Assert
-    array_assert(sut.boids.positions[0, :], expected_x_positions, 6)
-    array_assert(sut.boids.positions[1, :], expected_y_positions, 6)
-    array_assert(sut.boids.velocities[0, :], expected_x_velocities, 6)
-    array_assert(sut.boids.velocities[1, :], expected_y_velocities, 6)
+        # Assert
+        array_assert(sut.boids.positions, expected_positions, 6)
+        array_assert(sut.boids.velocities, expected_velocities, 6)
