@@ -4,7 +4,7 @@ import numpy as np
 import yaml
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.boids import Simulator, Boids
+from badboids.boids import Simulator, Boids, SimulationParameters
 
 
 def create_boids_data():
@@ -24,7 +24,8 @@ def create_boids_data():
 def create_badboids_regression_fixtures_file():
     """Creates a fixtures file with before and after data of a single boids update iteration"""
     boids = create_boids_data()
-    simulator = Simulator(boids)
+    simulation_parameters = SimulationParameters.get_defaults()
+    simulator = Simulator(boids, simulation_parameters)
 
     before = deepcopy(boids)
     simulator.update_boids()
@@ -42,7 +43,8 @@ def test_boids():
     regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixtures', 'regression_badboids.yaml')))
     boids = create_boids_data()
     boid_data_expected = regression_data["after"]
-    sut = Simulator(boids)
+    simulation_parameters = SimulationParameters.get_defaults()
+    sut = Simulator(boids, simulation_parameters)
 
     # Act
     sut.update_boids()

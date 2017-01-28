@@ -1,4 +1,4 @@
-from badboids.boids import BoidsBuilder, Simulator
+from badboids.boids import BoidsBuilder, Simulator, SimulationParametersLoader
 
 if __name__ == "__main__":
 
@@ -16,5 +16,8 @@ if __name__ == "__main__":
     builder.set_y_velocity_limits(y_velocity_limits)
     boids = builder.finish()
 
-    simulator = Simulator(boids)  # todo add simulation_parameters = config file
+    loader = SimulationParametersLoader()
+    simulation_parameters = loader.load_parameters()
+
+    simulator = Simulator(boids, simulation_parameters)
     simulator.run_simulation()

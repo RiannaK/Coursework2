@@ -3,7 +3,7 @@ import yaml
 import os
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.boids import Boids, Simulator
+from badboids.boids import Boids, Simulator, SimulationParameters
 
 
 def test_simulator_fly_towards_middle():
@@ -21,7 +21,8 @@ def test_simulator_fly_towards_middle():
         expected_velocities = np.array(fixture.pop('expected_velocities'))
 
         boids = Boids(positions, velocities)
-        sut = Simulator(boids)
+        simulation_parameters = SimulationParameters.get_defaults()
+        sut = Simulator(boids, simulation_parameters)
 
         # Act
         sut.fly_towards_middle()
@@ -45,7 +46,8 @@ def test_simulator_fly_away_from_nearby_boids():
         expected_velocities = np.array(fixture.pop('expected_velocities'))
 
         boids = Boids(positions, velocities)
-        sut = Simulator(boids)
+        simulation_parameters = SimulationParameters.get_defaults()
+        sut = Simulator(boids, simulation_parameters)
 
         # Act
         sut.fly_away_from_nearby_boids()
@@ -70,7 +72,8 @@ def test_simulator_match_speed_of_nearby_boids():
         expected_velocities = np.array(fixture.pop('expected_velocities'))
 
         boids = Boids(positions, velocities)
-        sut = Simulator(boids)
+        simulation_parameters = SimulationParameters.get_defaults()
+        sut = Simulator(boids, simulation_parameters)
 
         # Act
         sut.match_speed_of_nearby_boids()
@@ -81,7 +84,7 @@ def test_simulator_match_speed_of_nearby_boids():
 
 
 def test_simulator_update_velocities():
-    """Tests Simulator 'fly_away_from_nearby_boids' method"""
+    """Tests Simulator 'update velocities' method"""
 
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
         fixtures = yaml.load(fixtures_file)['test_simulator_update_velocities']
@@ -95,7 +98,8 @@ def test_simulator_update_velocities():
         expected_velocities = np.array(fixture.pop('expected_velocities'))
 
         boids = Boids(positions, velocities)
-        sut = Simulator(boids)
+        simulation_parameters = SimulationParameters.get_defaults()
+        sut = Simulator(boids, simulation_parameters)
 
         # Act
         sut.update_positions()

@@ -4,6 +4,8 @@ for use as an exercise on refactoring.
 """
 
 import numpy as np
+import yaml
+import os
 from matplotlib import animation
 from matplotlib import pyplot as plt
 
@@ -28,6 +30,24 @@ class SimulationParameters:
         return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
                                     move_to_middle_strength, delta_t)
 
+class SimulationParametersLoader:
+    def __init__(self):
+        pass
+
+    def load_parameters(self):
+
+        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as fixtures_file:
+            fixtures = yaml.load(fixtures_file)['defaults']
+
+        for fixture in fixtures:
+            formation_flying_distance = fixture.pop('formation_flying_distance')
+            formation_flying_strength = fixture.pop('formation_flying_strength')
+            alert_distance = fixture.pop('alert_distance')
+            move_to_middle_strength = fixture.pop('move_to_middle_strength')
+            delta_t = fixture.pop('delta_t')
+
+        return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
+                                    move_to_middle_strength, delta_t)
 
 class Boids:
     def __init__(self, positions, velocities):
@@ -88,10 +108,10 @@ class BoidsBuilder:
 
 
 class Simulator:
-    def __init__(self, boids):
+    def __init__(self, boids, simulation_parameters):
         self.boids = boids
         self.scatter = None
-        self.parameters = SimulationParameters.get_defaults()
+        self.parameters = simulation_parameters
 
     def update_boids(self):
         self.fly_towards_middle()
