@@ -31,7 +31,6 @@ def test_simulator_fly_towards_middle():
         array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
-
 def test_simulator_fly_away_from_nearby_boids():
     """Tests Simulator 'fly_away_from_nearby_boids' method"""
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
@@ -54,6 +53,7 @@ def test_simulator_fly_away_from_nearby_boids():
         # Assert
         array_assert(sut.boids.positions, expected_positions, 6)
         array_assert(sut.boids.velocities, expected_velocities, 6)
+
 
 def test_simulator_match_speed_of_nearby_boids():
     """Tests Simulator 'match_speed_of_nearby_boids' method"""
@@ -103,3 +103,4 @@ def test_simulator_update_velocities():
         # Assert
         array_assert(sut.boids.positions, expected_positions, 6)
         array_assert(sut.boids.velocities, expected_velocities, 6)
+

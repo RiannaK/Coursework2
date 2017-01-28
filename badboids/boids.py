@@ -8,15 +8,34 @@ from matplotlib import animation
 from matplotlib import pyplot as plt
 
 
-class Boids:
+class SimulationParameters:
+    def __init__(self, formation_flying_distance, formation_flying_strength, alert_distance, move_to_middle_strength,
+                 delta_t):
+        self.delta_t = delta_t
+        self.move_to_middle_strength = move_to_middle_strength
+        self.alert_distance = alert_distance
+        self.formation_flying_strength = formation_flying_strength
+        self.formation_flying_distance = formation_flying_distance
 
+    @staticmethod
+    def get_defaults():
+        delta_t = 1
+        move_to_middle_strength = 0.01
+        alert_distance = 100
+        formation_flying_strength = 0.125
+        formation_flying_distance = 10000
+
+        return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
+                                    move_to_middle_strength, delta_t)
+
+
+class Boids:
     def __init__(self, positions, velocities):
         self.positions = positions
         self.velocities = velocities
         self.num_boids = self.get_number_of_boids()
 
     def get_number_of_boids(self):
-
         if self.positions.shape != self.velocities.shape:
             raise IndexError("matrix dimensions must match")
 
@@ -24,9 +43,7 @@ class Boids:
 
 
 class BoidsBuilder:
-
     def __init__(self):
-
         self.num_boids = None
         self.x_limits = None
         self.y_limits = None
@@ -74,6 +91,7 @@ class Simulator:
     def __init__(self, boids):
         self.boids = boids
         self.scatter = None
+        self.parameters = SimulationParameters.get_defaults()
 
     def update_boids(self):
         self.fly_towards_middle()
@@ -82,21 +100,17 @@ class Simulator:
         self.update_positions()
 
     def fly_towards_middle(self):
-        move_to_middle_strength = 0.01
-
         middle = np.mean(self.boids.positions, 1)
         directions_to_middle = self.boids.positions - middle[:, np.newaxis]
-        self.boids.velocities -= directions_to_middle * move_to_middle_strength
+        self.boids.velocities -= directions_to_middle * self.parameters.move_to_middle_strength
 
     def fly_away_from_nearby_boids(self):
-        alert_distance = 100
-
         # Broadcast positions into matrices of separations
         sep_matrix = self.boids.positions[:, np.newaxis, :] - self.boids.positions[:, :, np.newaxis]
         square_displacements = sep_matrix * sep_matrix
         square_distances = np.sum(square_displacements, 0)
 
-        close_birds = square_distances < alert_distance
+        close_birds = square_distances < self.parameters.alert_distance
         far_birds = np.logical_not(close_birds)
 
         # use logical masking to ignore far away birds
@@ -107,9 +121,6 @@ class Simulator:
         self.boids.velocities += np.sum(separations_if_close, 1)
 
     def match_speed_of_nearby_boids(self):
-        formation_flying_distance = 10000
-        formation_flying_strength = 0.125
-
         # Broadcast positions into matrices of separations
         sep_matrix = self.boids.positions[:, np.newaxis, :] - self.boids.positions[:, :, np.newaxis]
         square_displacements = sep_matrix * sep_matrix
@@ -118,25 +129,23 @@ class Simulator:
         # Broadcast velocities into matrices of velocity differences
         vel_difference_matrix = self.boids.velocities[:, np.newaxis, :] - self.boids.velocities[:, :, np.newaxis]
 
-        very_far_birds = square_distances >= formation_flying_distance
+        very_far_birds = square_distances >= self.parameters.formation_flying_distance
 
         # use logical masking to ignore far away birds
         velocity_differences_if_close = np.copy(vel_difference_matrix)
         velocity_differences_if_close[0, :, :][very_far_birds] = 0
-        velocity_differences_if_close[1,:,:][very_far_birds] = 0
+        velocity_differences_if_close[1, :, :][very_far_birds] = 0
 
-        self.boids.velocities += np.mean(velocity_differences_if_close, 2) * formation_flying_strength
+        self.boids.velocities += np.mean(velocity_differences_if_close, 2) * self.parameters.formation_flying_strength
 
     def update_positions(self):
-        delta_t = 1
-        self.boids.positions += self.boids.velocities * delta_t
+        self.boids.positions += self.boids.velocities * self.parameters.delta_t
 
     def __animate(self, frame):
         self.update_boids()
         self.scatter.set_offsets(self.boids.positions.transpose())
 
     def run_simulation(self):
-
         axis_limits = -500, 1500
         figure = plt.figure()
         axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
@@ -144,5 +153,3 @@ class Simulator:
 
         anim = animation.FuncAnimation(figure, self.__animate, frames=50, interval=50)
         plt.show()
-
-

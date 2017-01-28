@@ -9,13 +9,8 @@ def test_boids_init():
     """Tests Boids constructor"""
 
     # Arrange
-    x_positions = np.array([1., 2., 3.])
-    y_positions = np.array([3., 5., 7.])
-    positions = np.vstack([x_positions, y_positions])
-
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+    positions = np.array([[1., 2., 3.], [3., 5., 7.]])
+    velocities = np.array([[10., 11., 12.], [13., 14., 15.]])
 
     # Act
     sut = Boids(positions, velocities)
@@ -27,15 +22,10 @@ def test_boids_init():
 
 def test_boids_init_with_incorrect_array_length():
     """Tests Boids constructor with incorrect array lengths"""
-    # todo add this to a fixtures file
-    # Arrange
-    x_positions = np.array([1., 2., 3., 4.])
-    y_positions = np.array([3., 5., 7.,5.])
-    positions = np.vstack([x_positions, y_positions])
 
-    x_velocities = np.array([10., 11., 12.])
-    y_velocities = np.array([13., 14., 15.])
-    velocities = np.vstack([x_velocities, y_velocities])
+    # Arrange
+    positions = np.array([[1., 2., 3., 4.], [3., 5., 7.,5.]])
+    velocities = np.array([[10., 11., 12.], [13., 14., 15.]])
 
     # Act + Assert
     with pytest.raises(IndexError):
