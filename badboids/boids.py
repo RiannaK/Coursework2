@@ -74,7 +74,6 @@ class BoidsParametersLoader:
 
         return BoidsSetupParameters(num_boids, x_limits, y_limits, x_velocity_limits, y_velocity_limits)
 
-
     def load_parameters_from_file(self, config_section):  # pragma: no cover
         with open(os.path.join(os.path.dirname(__file__), 'boids_parameters.yaml')) as parameters_file:
             return yaml.load(parameters_file)[config_section][0]

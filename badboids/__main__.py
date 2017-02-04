@@ -1,7 +1,12 @@
-from badboids.boids import BoidsBuilder, SimulatorModel, BoidsParametersLoader, BoidsController, BoidsView, \
-    BoidsSetupParameters
+import sys
 
-if __name__ == "__main__":
+from badboids.boids import *
+
+
+def main(args=None):
+    """The main routine."""
+    if args is None:
+        args = sys.argv[1:]
 
     loader = BoidsParametersLoader()
     simulation_parameters = loader.load_simulation_parameters()
@@ -15,8 +20,11 @@ if __name__ == "__main__":
     builder.set_y_velocity_limits(setup_parameters.y_velocity_limits)
     boids = builder.finish()
 
-    simulator = SimulatorModel(boids, simulation_parameters)
-
-    boids_view = BoidsView()
-    controller = BoidsController(simulator, boids_view)
+    model = SimulatorModel(boids, simulation_parameters)
+    view = BoidsView()
+    controller = BoidsController(model, view)
     controller.run_simulation()
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
