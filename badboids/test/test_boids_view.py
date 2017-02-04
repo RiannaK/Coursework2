@@ -8,7 +8,7 @@ from badboids.boids import BoidsView
 @patch.object(matplotlib.pyplot, 'figure')
 @patch.object(matplotlib.pyplot, 'show')
 def test_boids_voids_initialise_view(mock_show, mock_figure):
-    """Tests Boids View initialise method """
+    """Tests Boids View initialise view method """
 
     # Arrange
     sut = BoidsView()

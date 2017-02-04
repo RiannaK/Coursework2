@@ -9,7 +9,7 @@ setup(
     author='Rianna Kelly',
     author_email='rianna.kelly.16@ucl.ac.uk',
     packages=find_packages(exclude=["*test"]),
-    scripts=["scripts/badboids"],
+    scripts=["scripts/boids"],
     entry_points=dict(console_scripts=['badboids = badboids.__main__:process']),
     install_requires=["argparse", "matplotlib"]
 )
