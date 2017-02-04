@@ -31,20 +31,16 @@ class SimulationParameters:
                                     move_to_middle_strength, delta_t)
 
 class SimulationParametersLoader:
-    def __init__(self):
-        pass
-
     def load_parameters(self):
 
-        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as fixtures_file:
-            fixtures = yaml.load(fixtures_file)['defaults']
+        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as parameters_file:
+            parameters = yaml.load(parameters_file)['defaults'][0]
 
-        for fixture in fixtures:
-            formation_flying_distance = fixture.pop('formation_flying_distance')
-            formation_flying_strength = fixture.pop('formation_flying_strength')
-            alert_distance = fixture.pop('alert_distance')
-            move_to_middle_strength = fixture.pop('move_to_middle_strength')
-            delta_t = fixture.pop('delta_t')
+        formation_flying_distance = parameters.pop('formation_flying_distance')
+        formation_flying_strength = parameters.pop('formation_flying_strength')
+        alert_distance = parameters.pop('alert_distance')
+        move_to_middle_strength = parameters.pop('move_to_middle_strength')
+        delta_t = parameters.pop('delta_t')
 
         return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
                                     move_to_middle_strength, delta_t)
@@ -161,15 +157,34 @@ class Simulator:
     def update_positions(self):
         self.boids.positions += self.boids.velocities * self.parameters.delta_t
 
-    def __animate(self, frame):
-        self.update_boids()
-        self.scatter.set_offsets(self.boids.positions.transpose())
+
+class BoidsController:
+
+    def __init__(self, boids_model, boids_view):
+        self.boids_model = boids_model
+        self.boids_view = boids_view
 
     def run_simulation(self):
-        axis_limits = -500, 1500
-        figure = plt.figure()
-        axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
-        self.scatter = axes.scatter(self.boids.positions[0, :], self.boids.positions[1, :])
 
-        anim = animation.FuncAnimation(figure, self.__animate, frames=50, interval=50)
+        anim = animation.FuncAnimation(self.boids_view.figure, self.__animate, frames=50, interval=50)
+        self.boids_view.initialise_view(self.boids_model.boids.positions)
+
+    def __animate(self, frame):
+        self.boids_model.update_boids()
+        self.boids_view.update_view(self.boids_model.boids.positions)
+
+
+class BoidsView:
+
+    def __init__(self):
+        self.scatter = None
+        self.figure = plt.figure()
+
+    def initialise_view(self, positions):
+        axis_limits = -500, 1500
+        axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
+        self.scatter = axes.scatter(positions[0, :], positions[1, :])
         plt.show()
+
+    def update_view(self, positions):
+        self.scatter.set_offsets(positions.transpose())

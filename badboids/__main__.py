@@ -1,4 +1,4 @@
-from badboids.boids import BoidsBuilder, Simulator, SimulationParametersLoader
+from badboids.boids import BoidsBuilder, Simulator, SimulationParametersLoader, BoidsController, BoidsView
 
 if __name__ == "__main__":
 
@@ -20,4 +20,7 @@ if __name__ == "__main__":
     simulation_parameters = loader.load_parameters()
 
     simulator = Simulator(boids, simulation_parameters)
-    simulator.run_simulation()
+
+    boids_view = BoidsView()
+    controller = BoidsController(simulator, boids_view)
+    controller.run_simulation()
