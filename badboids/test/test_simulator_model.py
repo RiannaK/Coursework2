@@ -3,10 +3,10 @@ import yaml
 import os
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.boids import Boids, Simulator, SimulationParameters
+from badboids.boids import Boids, SimulatorModel, SimulationParameters
 
 
-def test_simulator_fly_towards_middle():
+def test_simulator_model_fly_towards_middle():
     """Tests Simulator 'fly towards middle' method"""
 
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
@@ -22,7 +22,7 @@ def test_simulator_fly_towards_middle():
 
         boids = Boids(positions, velocities)
         simulation_parameters = SimulationParameters.get_defaults()
-        sut = Simulator(boids, simulation_parameters)
+        sut = SimulatorModel(boids, simulation_parameters)
 
         # Act
         sut.fly_towards_middle()
@@ -32,7 +32,7 @@ def test_simulator_fly_towards_middle():
         array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
-def test_simulator_fly_away_from_nearby_boids():
+def test_simulator_model_fly_away_from_nearby_boids():
     """Tests Simulator 'fly_away_from_nearby_boids' method"""
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
         fixtures = yaml.load(fixtures_file)['test_simulator_fly_away_from_nearby_boids']
@@ -47,7 +47,7 @@ def test_simulator_fly_away_from_nearby_boids():
 
         boids = Boids(positions, velocities)
         simulation_parameters = SimulationParameters.get_defaults()
-        sut = Simulator(boids, simulation_parameters)
+        sut = SimulatorModel(boids, simulation_parameters)
 
         # Act
         sut.fly_away_from_nearby_boids()
@@ -57,7 +57,7 @@ def test_simulator_fly_away_from_nearby_boids():
         array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
-def test_simulator_match_speed_of_nearby_boids():
+def test_simulator_model_match_speed_of_nearby_boids():
     """Tests Simulator 'match_speed_of_nearby_boids' method"""
 
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
@@ -73,7 +73,7 @@ def test_simulator_match_speed_of_nearby_boids():
 
         boids = Boids(positions, velocities)
         simulation_parameters = SimulationParameters.get_defaults()
-        sut = Simulator(boids, simulation_parameters)
+        sut = SimulatorModel(boids, simulation_parameters)
 
         # Act
         sut.match_speed_of_nearby_boids()
@@ -83,7 +83,7 @@ def test_simulator_match_speed_of_nearby_boids():
         array_assert(sut.boids.velocities, expected_velocities, 6)
 
 
-def test_simulator_update_velocities():
+def test_simulator_model_update_velocities():
     """Tests Simulator 'update velocities' method"""
 
     with open(os.path.join(os.path.dirname(__file__), 'fixtures', 'test_simulator_fixtures.yaml')) as fixtures_file:
@@ -99,7 +99,7 @@ def test_simulator_update_velocities():
 
         boids = Boids(positions, velocities)
         simulation_parameters = SimulationParameters.get_defaults()
-        sut = Simulator(boids, simulation_parameters)
+        sut = SimulatorModel(boids, simulation_parameters)
 
         # Act
         sut.update_positions()

@@ -10,6 +10,25 @@ from matplotlib import animation
 from matplotlib import pyplot as plt
 
 
+class BoidsSetupParameters:
+    def __init__(self, num_boids, x_limits, y_limits, x_velocity_limits, y_velocity_limits):
+        self.num_boids = num_boids
+        self.x_limits = x_limits
+        self.y_limits = y_limits
+        self.x_velocity_limits = x_velocity_limits
+        self.y_velocity_limits = y_velocity_limits
+
+    @staticmethod
+    def get_defaults():
+        num_boids = 50
+        x_limits = -450, 50
+        y_limits = 300, 600
+        x_velocity_limits = 0, 10
+        y_velocity_limits = -20, 20
+
+        return BoidsSetupParameters(num_boids, x_limits, y_limits, x_velocity_limits, y_velocity_limits)
+
+
 class SimulationParameters:
     def __init__(self, formation_flying_distance, formation_flying_strength, alert_distance, move_to_middle_strength,
                  delta_t):
@@ -31,10 +50,9 @@ class SimulationParameters:
                                     move_to_middle_strength, delta_t)
 
 
-class SimulationParametersLoader:
-
-    def load_parameters(self):
-        raw_parameters = self.load_parameters_from_file()
+class BoidsParametersLoader:
+    def load_simulation_parameters(self):
+        raw_parameters = self.load_parameters_from_file('simulation_parameter_defaults')
 
         formation_flying_distance = raw_parameters.pop('formation_flying_distance')
         formation_flying_strength = raw_parameters.pop('formation_flying_strength')
@@ -45,9 +63,21 @@ class SimulationParametersLoader:
         return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
                                     move_to_middle_strength, delta_t)
 
-    def load_parameters_from_file(self):  # pragma: no cover
-        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as parameters_file:
-            return yaml.load(parameters_file)['defaults'][0]
+    def load_boids_setup_parameters(self):
+        raw_parameters = self.load_parameters_from_file('boids_setup_parameters')
+
+        num_boids = raw_parameters.pop('num_boids')
+        x_limits = raw_parameters.pop('x_limits')
+        y_limits = raw_parameters.pop('y_limits')
+        x_velocity_limits = raw_parameters.pop('x_velocity_limits')
+        y_velocity_limits = raw_parameters.pop('y_velocity_limits')
+
+        return BoidsSetupParameters(num_boids, x_limits, y_limits, x_velocity_limits, y_velocity_limits)
+
+
+    def load_parameters_from_file(self, config_section):  # pragma: no cover
+        with open(os.path.join(os.path.dirname(__file__), 'boids_parameters.yaml')) as parameters_file:
+            return yaml.load(parameters_file)[config_section][0]
 
 
 class Boids:
@@ -112,7 +142,7 @@ class BoidsBuilder:
         assert self.y_velocity_limits is not None
 
 
-class Simulator:
+class SimulatorModel:
     def __init__(self, boids, simulation_parameters):
         self.boids = boids
         self.scatter = None
