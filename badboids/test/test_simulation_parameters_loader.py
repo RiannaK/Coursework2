@@ -1,12 +1,6 @@
-import numpy as np
-import pytest
-import matplotlib
-from matplotlib import animation
-from mock import MagicMock
 from mock import patch
-from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.boids import SimulationParameters, SimulationParametersLoader
+from badboids.boids import SimulationParametersLoader
 
 
 @patch.object(SimulationParametersLoader, 'load_parameters_from_file')

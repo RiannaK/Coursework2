@@ -1,3 +1,5 @@
+import pytest
+
 from badboids.boids import BoidsBuilder
 
 
@@ -70,7 +72,44 @@ def test_boids_builder_set_y_velocity_limits():
     # Assert
     assert sut.y_velocity_limits == y_velocity_limits
 
+
 def test_boids_builder_finish():
     """Tests BuilderBoids finish method"""
-    # todo COME BACK TO THIS
-    pass
+
+    # Arrange
+    num_boids = 50
+    x_limits = -20, 220
+    y_limits = -180, 60
+    x_velocity_limits = -15, 45
+    y_velocity_limits = 0, 60
+
+    sut = BoidsBuilder()
+    sut.set_num_boids(num_boids)
+    sut.set_x_position_limits(x_limits)
+    sut.set_y_position_limits(y_limits)
+    sut.set_x_velocity_limits(x_velocity_limits)
+    sut.set_y_velocity_limits(y_velocity_limits)
+
+    # Act
+    boids = sut.finish()
+
+    # Assert
+    assert boids.positions.shape == (2, 50)
+    assert boids.velocities.shape == (2, 50)
+
+
+
+def test_boids_builder_finish_with_missing_parameters_throws():
+    """Tests BuilderBoids finish method with missing parameters"""
+
+    # Arrange
+    num_boids = 50
+    x_limits = -20, 220
+
+    sut = BoidsBuilder()
+    sut.set_num_boids(num_boids)
+    sut.set_x_position_limits(x_limits)
+
+    # Act + Assert
+    with pytest.raises(AssertionError):
+        sut.finish()

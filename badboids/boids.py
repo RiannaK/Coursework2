@@ -87,7 +87,7 @@ class BoidsBuilder:
         self.y_velocity_limits = y_velocity_limits
 
     def finish(self):
-        self.validate()
+        self.__validate()
 
         lower_positions = np.array([self.x_limits[0], self.y_limits[0]])
         upper_positions = np.array([self.x_limits[1], self.y_limits[1]])
@@ -104,8 +104,12 @@ class BoidsBuilder:
         width = upper_limits - lower_limits
         return lower_limits[:, np.newaxis] + (np.random.rand(2, self.num_boids) * width[:, np.newaxis])
 
-    def validate(self):
-        pass
+    def __validate(self):
+        assert self.num_boids is not None
+        assert self.x_limits is not None
+        assert self.y_limits is not None
+        assert self.x_velocity_limits is not None
+        assert self.y_velocity_limits is not None
 
 
 class Simulator:
