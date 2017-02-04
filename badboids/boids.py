@@ -30,20 +30,25 @@ class SimulationParameters:
         return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
                                     move_to_middle_strength, delta_t)
 
+
 class SimulationParametersLoader:
+
     def load_parameters(self):
+        raw_parameters = self.load_parameters_from_file()
 
-        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as parameters_file:
-            parameters = yaml.load(parameters_file)['defaults'][0]
-
-        formation_flying_distance = parameters.pop('formation_flying_distance')
-        formation_flying_strength = parameters.pop('formation_flying_strength')
-        alert_distance = parameters.pop('alert_distance')
-        move_to_middle_strength = parameters.pop('move_to_middle_strength')
-        delta_t = parameters.pop('delta_t')
+        formation_flying_distance = raw_parameters.pop('formation_flying_distance')
+        formation_flying_strength = raw_parameters.pop('formation_flying_strength')
+        alert_distance = raw_parameters.pop('alert_distance')
+        move_to_middle_strength = raw_parameters.pop('move_to_middle_strength')
+        delta_t = raw_parameters.pop('delta_t')
 
         return SimulationParameters(formation_flying_distance, formation_flying_strength, alert_distance,
                                     move_to_middle_strength, delta_t)
+
+    def load_parameters_from_file(self):  # pragma: no cover
+        with open(os.path.join(os.path.dirname(__file__), 'config.yaml')) as parameters_file:
+            return yaml.load(parameters_file)['defaults'][0]
+
 
 class Boids:
     def __init__(self, positions, velocities):
@@ -159,13 +164,11 @@ class Simulator:
 
 
 class BoidsController:
-
     def __init__(self, boids_model, boids_view):
         self.boids_model = boids_model
         self.boids_view = boids_view
 
     def run_simulation(self):
-
         anim = animation.FuncAnimation(self.boids_view.figure, self.__animate, frames=50, interval=50)
         self.boids_view.initialise_view(self.boids_model.boids.positions)
 
@@ -175,7 +178,6 @@ class BoidsController:
 
 
 class BoidsView:
-
     def __init__(self):
         self.scatter = None
         self.figure = plt.figure()
