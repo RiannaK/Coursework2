@@ -19,8 +19,7 @@ def test_boids_controller_run_simulation(mock_update_view, mock_initialise_view,
 
     # Arrange
     model = MagicMock()
-    view = BoidsView()
-    sut = BoidsController(model, view)
+    sut = BoidsController(model)
 
     mock_func_animation.side_effect = check_func_animation_callback
 

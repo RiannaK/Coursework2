@@ -5,7 +5,6 @@ for use as an exercise on refactoring.
 
 import numpy as np
 import yaml
-import os
 from matplotlib import animation
 from matplotlib import pyplot as plt
 
@@ -51,8 +50,14 @@ class SimulationParameters:
 
 
 class BoidsParametersLoader:
+    def __init__(self, config_file_path=''):
+        self.config_file_path = config_file_path
+
     def load_simulation_parameters(self):
-        raw_parameters = self.load_parameters_from_file('simulation_parameter_defaults')
+        if self.config_file_path:
+            raw_parameters = self.load_parameters_from_file('simulation_parameter_defaults')
+        else:
+            return SimulationParameters.get_defaults()
 
         formation_flying_distance = raw_parameters.pop('formation_flying_distance')
         formation_flying_strength = raw_parameters.pop('formation_flying_strength')
@@ -64,7 +69,10 @@ class BoidsParametersLoader:
                                     move_to_middle_strength, delta_t)
 
     def load_boids_setup_parameters(self):
-        raw_parameters = self.load_parameters_from_file('boids_setup_parameters')
+        if self.config_file_path:
+            raw_parameters = self.load_parameters_from_file('boids_setup_parameters')
+        else:
+            return BoidsSetupParameters.get_defaults()
 
         num_boids = raw_parameters.pop('num_boids')
         x_limits = raw_parameters.pop('x_limits')
@@ -75,7 +83,7 @@ class BoidsParametersLoader:
         return BoidsSetupParameters(num_boids, x_limits, y_limits, x_velocity_limits, y_velocity_limits)
 
     def load_parameters_from_file(self, config_section):  # pragma: no cover
-        with open(os.path.join(os.path.dirname(__file__), 'boids_parameters.yaml')) as parameters_file:
+        with open(self.config_file_path) as parameters_file:
             return yaml.load(parameters_file)[config_section][0]
 
 
@@ -124,12 +132,12 @@ class BoidsBuilder:
         lower_velocities = np.array([self.x_velocity_limits[0], self.y_velocity_limits[0]])
         upper_velocities = np.array([self.x_velocity_limits[1], self.y_velocity_limits[1]])
 
-        positions = self.make_random_array(lower_positions, upper_positions)
-        velocities = self.make_random_array(lower_velocities, upper_velocities)
+        positions = self.__make_random_array(lower_positions, upper_positions)
+        velocities = self.__make_random_array(lower_velocities, upper_velocities)
 
         return Boids(positions, velocities)
 
-    def make_random_array(self, lower_limits, upper_limits):
+    def __make_random_array(self, lower_limits, upper_limits):
         width = upper_limits - lower_limits
         return lower_limits[:, np.newaxis] + (np.random.rand(2, self.num_boids) * width[:, np.newaxis])
 
@@ -197,13 +205,15 @@ class SimulatorModel:
 
 
 class BoidsController:
-    def __init__(self, boids_model, boids_view):
+    def __init__(self, boids_model):
         self.boids_model = boids_model
-        self.boids_view = boids_view
+        self.boids_view = BoidsView()
 
     def run_simulation(self):
         anim = animation.FuncAnimation(self.boids_view.figure, self.__animate, frames=50, interval=50)
         self.boids_view.initialise_view(self.boids_model.boids.positions)
+
+        return anim
 
     def __animate(self, frame):
         self.boids_model.update_boids()
@@ -213,12 +223,15 @@ class BoidsController:
 class BoidsView:
     def __init__(self):
         self.scatter = None
-        self.figure = plt.figure()
+        self.figure = plt.figure(facecolor='white')
 
     def initialise_view(self, positions):
         axis_limits = -500, 1500
         axes = plt.axes(xlim=axis_limits, ylim=axis_limits)
         self.scatter = axes.scatter(positions[0, :], positions[1, :])
+        plt.xlabel('x positions')
+        plt.ylabel('y positions')
+        plt.title('Simulation of a flock of boids')
         plt.show()
 
     def update_view(self, positions):

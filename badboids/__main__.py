@@ -1,14 +1,15 @@
 import sys
 
+from argparse import ArgumentParser
+
 from badboids.boids import *
 
 
-def main(args=None):
+def main():
     """The main routine."""
-    if args is None:
-        args = sys.argv[1:]
+    parsed_arguments = parse_arguments()
 
-    loader = BoidsParametersLoader()
+    loader = BoidsParametersLoader(parsed_arguments.config)
     simulation_parameters = loader.load_simulation_parameters()
     setup_parameters = loader.load_boids_setup_parameters()
 
@@ -21,9 +22,22 @@ def main(args=None):
     boids = builder.finish()
 
     model = SimulatorModel(boids, simulation_parameters)
-    view = BoidsView()
-    controller = BoidsController(model, view)
+    controller = BoidsController(model)
     controller.run_simulation()
+
+
+def parse_arguments():
+    # Create the argument parser.
+    parser = ArgumentParser(
+        description="Command line tool for simulating the behaviour of a flock of animals.")
+
+    # Now we add the arguments.
+    parser.add_argument('-c', '--config', type=str, default='',
+                        help='the full path of the config file (.yaml) that specifies simulation parameters and setup. ' +
+                             'If no file is specified, default parameters will be used.')
+
+    # Parse the args
+    return parser.parse_args()
 
 
 if __name__ == "__main__":  # pragma: no cover

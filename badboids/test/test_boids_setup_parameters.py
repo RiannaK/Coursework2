@@ -1,8 +1,6 @@
-import numpy as np
-import pytest
 from numpy.testing import assert_array_almost_equal as array_assert
 
-from badboids.boids import SimulationParameters, BoidsSetupParameters
+from badboids.boids import BoidsSetupParameters
 
 
 def test_boids_setup_parameters_init():
