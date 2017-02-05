@@ -5,9 +5,8 @@ from argparse import ArgumentParser
 from badboids.boids import *
 
 
-def main():
-    """The main routine."""
-    parsed_arguments = parse_arguments()
+def main(args=''):
+    parsed_arguments = parse_arguments(args)
 
     loader = BoidsParametersLoader(parsed_arguments.config)
     simulation_parameters = loader.load_simulation_parameters()
@@ -26,7 +25,7 @@ def main():
     controller.run_simulation()
 
 
-def parse_arguments():
+def parse_arguments(args):
     # Create the argument parser.
     parser = ArgumentParser(
         description="Command line tool for simulating the behaviour of a flock of animals.")
@@ -37,8 +36,8 @@ def parse_arguments():
                              'If no file is specified, default parameters will be used.')
 
     # Parse the args
-    return parser.parse_args()
+    return parser.parse_args(args=args)
 
 
 if __name__ == "__main__":  # pragma: no cover
-    main()
+    main(sys.argv[1:])
