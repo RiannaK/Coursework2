@@ -29,13 +29,15 @@ Installing directly from GitHub?
 
 ###How to Use
 
-Once installed, the user can chose to run boids using the default settings.
+Once installed, the user can chose to run boids using the default settings. 
+
+In this case, the boids script can be called from the command line using the following syntax:
 
 ``` badboids ```
 
-If desired, the user can specify their own simulation parameters and setup parameters within a configuration (.yaml) file.
+If desired, the user can specify their own simulation parameters and setup parameters within a configuration (.yaml) file. The required parameters can be found in the tables and example below.
 
-In this case, the boids script can be called from the command line using the following syntax:
+In this case, once the configuration file is updated, the boids script can be called from the command line using the following syntax:
 
 ``` badboids --config "insert\full\file\path\to\config.yaml" ``` 
 
