@@ -5,6 +5,6 @@
 .cache
 .coverage
 
-boids.egg-info
+badboids.egg-info
 build
 dist

@@ -1,0 +1,15 @@
+# default parameters for the simualation and boids initial setup
+
+boids_setup_parameters:
+- num_boids: 50
+  x_limits: [-450, 50]
+  y_limits: [300, 600]
+  x_velocity_limits: [0, 10]
+  y_velocity_limits: [-20, 20]
+
+simulation_parameter_defaults:
+- formation_flying_distance: 10000
+  formation_flying_strength: 0.125
+  alert_distance: 100
+  move_to_middle_strength: 0.01
+  delta_t: 1.0

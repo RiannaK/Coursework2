@@ -1,27 +1,34 @@
-from copy import deepcopy
 import os
+from copy import deepcopy
 import numpy as np
 import yaml
 from numpy.testing import assert_array_almost_equal as array_assert
-from badboids.badboids import update_boids
+
+from badboids.boids import SimulatorModel, Boids, SimulationParameters
 
 
 def create_boids_data():
-    boids_x = list(np.arange(-450.0, 50.0, 50.0))
-    boids_y = list(np.arange(-450.0, 50.0, 50.0))
-    boids_x_velocities = list(np.arange(0.0, 10.0, 1.0))
-    boids_y_velocities = list(np.arange(0.0, 40.0, 4.0))
-    boids = (boids_x, boids_y, boids_x_velocities, boids_y_velocities)
+    boids_x = np.arange(-45.0, 5.0, 5.0)
+    boids_y = np.arange(0.0, 10.0, 1.0)
+    positions = np.vstack([boids_x, boids_y])
+
+    boids_x_velocities = np.arange(0.0, 10.0, 1.0)
+    boids_y_velocities = np.arange(0.0, 40.0, 4.0)
+    velocities = np.vstack([boids_x_velocities, boids_y_velocities])
+
+    boids = Boids(positions, velocities)
 
     return boids
 
 
-def create_badboids_regression_fixtures_file():
-    '''add information'''
+def create_badboids_regression_fixtures_file():  # pragma: no cover
+    """Creates a fixtures file with before and after data of a single boids update iteration"""
     boids = create_boids_data()
+    simulation_parameters = SimulationParameters.get_defaults()
+    simulator = SimulatorModel(boids, simulation_parameters)
 
     before = deepcopy(boids)
-    update_boids(boids)
+    simulator.update_boids()
     after = boids
 
     fixture = {"before": before, "after": after}
@@ -31,21 +38,20 @@ def create_badboids_regression_fixtures_file():
 
 
 def test_boids():
-
     # Arrange
     regression_data = yaml.load(open(os.path.join(os.path.dirname(__file__), 'fixtures', 'regression_badboids.yaml')))
-    boid_data = regression_data["before"]
+    boids = create_boids_data()
     boid_data_expected = regression_data["after"]
+    simulation_parameters = SimulationParameters.get_defaults()
+    sut = SimulatorModel(boids, simulation_parameters)
 
     # Act
-    update_boids(boid_data)
+    sut.update_boids()
 
     # Assert
-    array_assert(boid_data_expected[0], boid_data[0], 6)
-    array_assert(boid_data_expected[1], boid_data[1], 6)
-    array_assert(boid_data_expected[2], boid_data[2], 6)
-    array_assert(boid_data_expected[3], boid_data[3], 6)
+    array_assert(boid_data_expected.positions, boids.positions, 6)
+    array_assert(boid_data_expected.velocities, boids.velocities, 6)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     create_badboids_regression_fixtures_file()
