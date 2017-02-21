@@ -12,8 +12,8 @@ setup(
     package_data={"badboids": ["*.yaml"]},
     include_package_data=True,
     test_suite="pytest",
-    tests_require=["mock", "pytest", "yaml"],
+    tests_require=["mock", "pytest", "pyyaml"],
     scripts=["scripts/boids"],
     entry_points=dict(console_scripts=["badboids = badboids.__main__:main"]),
-    install_requires=["argparse", "matplotlib", "numpy", "yaml"]
+    install_requires=["argparse", "matplotlib", "numpy", "pyyaml"]
 )
